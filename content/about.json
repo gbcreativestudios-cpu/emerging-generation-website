@@ -1,8 +1,39 @@
 {
-  "hero": {
-    "eyebrow": "Our Identity",
-    "heading": "Empowering the Next Generation of Newcomers",
-    "paragraph": "We are dedicated to designing communities of mentorship, structural leadership programs, and professional pathways for immigrant youth across Canada."
+  "values": {
+    "eyebrow": "Core Pillars",
+    "heading": "Our Values",
+    "items": [
+      {
+        "icon": "shield",
+        "title": "Belonging",
+        "description": "Fostering a nurturing ecosystem where youth feel acknowledged, integrated, and celebrated."
+      },
+      {
+        "icon": "sparkles",
+        "title": "Empowerment",
+        "description": "Instilling the psychological security and physical leadership models to shape agency."
+      },
+      {
+        "icon": "compass",
+        "title": "Growth",
+        "description": "Encouraging dynamic development through career preparation and identity evolution."
+      },
+      {
+        "icon": "award",
+        "title": "Leadership",
+        "description": "Equipping newcomer youth to take active roles inside local municipal systems."
+      },
+      {
+        "icon": "users",
+        "title": "Community",
+        "description": "Linking social organizations, leaders, academic partners, and cohorts."
+      },
+      {
+        "icon": "heart",
+        "title": "Service",
+        "description": "Giving back systematically through community outreach, mentoring, and support circles."
+      }
+    ]
   },
   "who_we_are": {
     "heading": "Who We Are",
@@ -21,17 +52,31 @@
     "paragraph": "Our ongoing mission is to cultivate structured environments that support mental and physical health, build professional confidence, and coordinate deep peer networking channels.",
     "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600"
   },
-  "values": {
-    "eyebrow": "Core Pillars",
-    "heading": "Our Values",
-    "items": [
-      { "icon": "shield", "title": "Belonging", "description": "Fostering a nurturing ecosystem where youth feel acknowledged, integrated, and celebrated." },
-      { "icon": "sparkles", "title": "Empowerment", "description": "Instilling the psychological security and physical leadership models to shape agency." },
-      { "icon": "compass", "title": "Growth", "description": "Encouraging dynamic development through career preparation and identity evolution." },
-      { "icon": "award", "title": "Leadership", "description": "Equipping newcomer youth to take active roles inside local municipal systems." },
-      { "icon": "users", "title": "Community", "description": "Linking social organizations, leaders, academic partners, and cohorts." },
-      { "icon": "heart", "title": "Service", "description": "Giving back systematically through community outreach, mentoring, and support circles." }
-    ]
+  "founder": {
+    "eyebrow": "The Founder's Story",
+    "name": "Stella Orji-Dada",
+    "title": "Founder & Executive Director",
+    "image": "/images/img_1490-tanko-dada-image.jpg",
+    "paragraphs": [
+      "As an immigrant arriving in Canada, Stella intimately understands the emotional trials of adjustment, identity negotiation, and systemic pathfinding that young newcomers navigate.",
+      "Armed with a Master’s degree in Social Work and a decade of specialized youth advocacy, she built The Emerging Generation to establish systemic frameworks of integration, ensuring no newcomer feels isolated."
+    ],
+    "quote": "When I think about why The Emerging Generation exists, I think about every young person who has ever walked into a new country and wondered if they'd ever truly belong. I've seen how disorienting it can be—navigating unfamiliar systems, building confidence in a new environment, holding onto who you are while discovering who you're becoming.",
+    "closing_paragraph": "It's not just about settling in. It's about being seen, being valued, and being given the tools to lead. That's what this organization was built for. Every workshop, every mentorship pairing, every conversation we create is rooted in one belief: every young immigrant deserves a place to belong, a community to grow with, and the opportunity to become the leader they were created to be. This is more than a program. It's a promise, and I'm honored to walk this journey alongside every young person who's part of it."
+  },
+  "get_involved": {
+    "eyebrow": "Next Steps",
+    "heading": "Are You Ready to Shape Tomorrow?"
+  },
+  "why_us": {
+    "eyebrow": "Our Core Edge",
+    "heading": "Why The Emerging Generation?",
+    "paragraph": "Unlike general settlement agencies, we tailor our focus entirely around leadership development and community support systems. We believe newcomer youth shouldn't just adapt—they should be equipped to build Canada’s tomorrow."
+  },
+  "hero": {
+    "eyebrow": "Our Identity",
+    "heading": "Empowering the Next Generation of Newcomers",
+    "paragraph": "We are dedicated to designing communities of mentorship, structural leadership programs, and professional pathways for immigrant youth across Canada."
   },
   "promise": {
     "eyebrow": "Our Promise",
@@ -41,28 +86,7 @@
   "who_we_serve": {
     "eyebrow": "Target Demographic",
     "heading": "Who We Serve",
-    "paragraph": "We exclusively focus on immigrant and newcomer youth in Canada (ages 15\u201325). This is a critical age group where foundational educational choices occur alongside complex cultural navigation, and we ensure they receive complete support systems to thrive.",
+    "paragraph": "We exclusively focus on immigrant and newcomer youth in Canada (ages 15–25). This is a critical age group where foundational educational choices occur alongside complex cultural navigation, and we ensure they receive complete support systems to thrive.",
     "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=600"
-  },
-  "why_us": {
-    "eyebrow": "Our Core Edge",
-    "heading": "Why The Emerging Generation?",
-    "paragraph": "Unlike general settlement agencies, we tailor our focus entirely around leadership development and community support systems. We believe newcomer youth shouldn't just adapt\u2014they should be equipped to build Canada\u2019s tomorrow."
-  },
-  "founder": {
-    "eyebrow": "The Founder's Story",
-    "name": "Stella Orji-Dada",
-    "title": "Founder & Executive Director",
-    "image": "/images/speakers/stella-orji-dada.jpg",
-    "paragraphs": [
-      "As an immigrant arriving in Canada, Stella intimately understands the emotional trials of adjustment, identity negotiation, and systemic pathfinding that young newcomers navigate.",
-      "Armed with a Master\u2019s degree in Social Work and a decade of specialized youth advocacy, she built The Emerging Generation to establish systemic frameworks of integration, ensuring no newcomer feels isolated."
-    ],
-    "quote": "When I think about why The Emerging Generation exists, I think about every young person who has ever walked into a new country and wondered if they'd ever truly belong. I've seen how disorienting it can be\u2014navigating unfamiliar systems, building confidence in a new environment, holding onto who you are while discovering who you're becoming.",
-    "closing_paragraph": "It's not just about settling in. It's about being seen, being valued, and being given the tools to lead. That's what this organization was built for. Every workshop, every mentorship pairing, every conversation we create is rooted in one belief: every young immigrant deserves a place to belong, a community to grow with, and the opportunity to become the leader they were created to be. This is more than a program. It's a promise, and I'm honored to walk this journey alongside every young person who's part of it."
-  },
-  "get_involved": {
-    "eyebrow": "Next Steps",
-    "heading": "Are You Ready to Shape Tomorrow?"
   }
 }
