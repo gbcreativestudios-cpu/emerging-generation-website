@@ -1,8 +1,9 @@
 ---
 name: Stella Orji-Dada
 position: Founder & Executive Director
-image: /images/speakers/stella-orji-dada.jpg
-experience: "10+ years in non-profit leadership, master’s degree in Social Work, community advocate."
+image: /images/img_1490-tanko-dada.jpg
+experience: 10+ years in non-profit leadership, master’s degree in Social Work,
+  community advocate.
 topics:
   - Navigating Newcomer Identity
   - Youth Leadership Development
