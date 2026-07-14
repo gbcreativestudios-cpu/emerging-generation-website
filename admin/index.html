@@ -8,9 +8,14 @@
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
+<script>
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", user => {
+      // Check for recovery token in URL
+      if (window.location.hash.includes("recovery_token")) {
+        window.netlifyIdentity.open("recovery"); 
+      }
+      
       if (!user) {
         window.netlifyIdentity.on("login", () => {
           document.location.href = "/admin/";
