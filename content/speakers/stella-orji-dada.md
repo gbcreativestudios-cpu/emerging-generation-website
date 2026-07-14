@@ -1,7 +1,7 @@
 ---
 name: Stella Orji-Dada
 position: Founder & Executive Director
-image: /images/img_1490-tanko-dada.jpg
+image: /images/img_1490-tanko-dada-image.jpg
 experience: 10+ years in non-profit leadership, master’s degree in Social Work,
   community advocate.
 topics:
