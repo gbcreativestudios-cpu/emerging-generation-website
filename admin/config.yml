@@ -1,0 +1,227 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+publish_mode: editorial_workflow
+
+locale: "en"
+
+collections:
+  # ------------------------------------------------------------
+  # Site-wide settings: logo, brand colors, footer/contact info
+  # ------------------------------------------------------------
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - name: "settings"
+        label: "General Settings"
+        file: "content/settings.json"
+        fields:
+          - { label: "Organization Name", name: "org_name", widget: "string" }
+          - { label: "Short Name (e.g. logo fallback initials)", name: "org_short", widget: "string" }
+          - { label: "Tagline (under name)", name: "org_tagline", widget: "string" }
+          - { label: "Header Logo (color)", name: "logo", widget: "image" }
+          - { label: "Footer Logo (white)", name: "logo_white", widget: "image" }
+          - label: "Brand Colors"
+            name: "colors"
+            widget: "object"
+            fields:
+              - { label: "Primary (dark green)", name: "primary", widget: "color" }
+              - { label: "Secondary (mid green)", name: "secondary", widget: "color" }
+              - { label: "Accent (orange, CTA buttons)", name: "accent", widget: "color" }
+              - { label: "Accent Yellow", name: "accent_yellow", widget: "color" }
+          - { label: "Nav 'Join' Button Label", name: "nav_cta_label", widget: "string" }
+          - { label: "Footer Blurb", name: "footer_blurb", widget: "text" }
+          - { label: "Contact Email", name: "contact_email", widget: "string" }
+          - { label: "Contact Location", name: "contact_location", widget: "string" }
+          - { label: "Footer Note (bottom right)", name: "footer_note", widget: "string" }
+
+  # ------------------------------------------------------------
+  # Home page content
+  # ------------------------------------------------------------
+  - name: "home"
+    label: "Home Page"
+    files:
+      - name: "home"
+        label: "Home Page"
+        file: "content/home.json"
+        fields:
+          - label: "Hero Section"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Badge Text", name: "badge", widget: "string" }
+              - { label: "Big Title", name: "title", widget: "string" }
+              - { label: "Theme Line", name: "theme", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Button Label", name: "cta_label", widget: "string" }
+              - { label: "Hero Image", name: "image", widget: "image" }
+              - { label: "Image Caption", name: "image_caption", widget: "string" }
+          - label: "Who We Are (green section)"
+            name: "who_we_are"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Link Label", name: "link_label", widget: "string" }
+          - label: "Navigate / Grow / Give Back Cards"
+            name: "pillars"
+            widget: "list"
+            fields:
+              - { label: "Icon", name: "icon", widget: "select", options: ["compass", "sparkles", "heart"] }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+          - label: "Speakers Preview Section"
+            name: "speakers_preview"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Link Label", name: "link_label", widget: "string" }
+          - label: "Why Newcomers Excel (Benefits)"
+            name: "benefits"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - label: "Benefit Cards"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Number (e.g. 01)", name: "number", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+          - label: "Get Involved Cards"
+            name: "get_involved"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - label: "Cards"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Icon", name: "icon", widget: "select", options: ["users", "compass", "heart", "briefcase"] }
+                  - { label: "Accent Color", name: "color", widget: "select", options: ["accent", "secondary", "yellow", "primary"] }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+                  - { label: "Button Label", name: "button_label", widget: "string" }
+                  - { label: "Form Title (which form this button opens)", name: "action", widget: "select", options: ["Join Community", "Become a Mentor", "Volunteer", "Partner"] }
+
+  # ------------------------------------------------------------
+  # About page content
+  # ------------------------------------------------------------
+  - name: "about"
+    label: "About Page"
+    files:
+      - name: "about"
+        label: "About Page"
+        file: "content/about.json"
+        fields:
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+          - label: "Who We Are"
+            name: "who_we_are"
+            widget: "object"
+            fields:
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph 1", name: "paragraph_1", widget: "text" }
+              - { label: "Paragraph 2", name: "paragraph_2", widget: "text" }
+          - label: "Our Vision"
+            name: "vision"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Image", name: "image", widget: "image" }
+          - label: "Our Mission"
+            name: "mission"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Image", name: "image", widget: "image" }
+          - label: "Our Values"
+            name: "values"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - label: "Value Cards (exactly 6 recommended)"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Icon", name: "icon", widget: "select", options: ["shield", "sparkles", "compass", "award", "users", "heart"] }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+          - label: "Our Promise"
+            name: "promise"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+          - label: "Who We Serve"
+            name: "who_we_serve"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Image", name: "image", widget: "image" }
+          - label: "Why The Emerging Generation"
+            name: "why_us"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph", name: "paragraph", widget: "text" }
+          - label: "Founder Story"
+            name: "founder"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Photo", name: "image", widget: "image" }
+              - { label: "Bio Paragraphs", name: "paragraphs", widget: "list" }
+              - { label: "Pull Quote", name: "quote", widget: "text" }
+              - { label: "Closing Paragraph", name: "closing_paragraph", widget: "text" }
+          - label: "Get Involved Section Header"
+            name: "get_involved"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Heading", name: "heading", widget: "string" }
+
+  # ------------------------------------------------------------
+  # Speakers — one file per speaker. Click "New Speaker" to add
+  # one, or open an existing speaker and use "Duplicate" to copy
+  # one as a starting point for a new profile.
+  # ------------------------------------------------------------
+  - name: "speakers"
+    label: "Speakers"
+    folder: "content/speakers"
+    create: true
+    duplicate: true
+    slug: "{{slug}}"
+    identifier_field: "name"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Position / Title", name: "position", widget: "string" }
+      - { label: "Photo", name: "image", widget: "image" }
+      - { label: "Experience / Background", name: "experience", widget: "string" }
+      - { label: "Speaking Topics", name: "topics", widget: "list" }
+      - { label: "Display Order", name: "order", widget: "number", value_type: "int", default: 1 }
+      - { label: "Biography", name: "body", widget: "markdown" }

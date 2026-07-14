@@ -1,0 +1,62 @@
+/* ============================================================
+   Brand color system — these CSS variables are updated at
+   runtime by js/render.js from content/settings.json, so
+   changing colors in Decap CMS updates the whole site.
+   ============================================================ */
+:root {
+  --color-primary: #0E3A2F;   /* deep forest green */
+  --color-secondary: #3B945E; /* mid green */
+  --color-accent: #FF6F43;    /* orange CTA */
+  --color-yellow: #EAB308;    /* accent yellow */
+}
+
+body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif; }
+
+/* Solid color utilities */
+.bg-primary   { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent    { background-color: var(--color-accent); }
+.bg-yellow    { background-color: var(--color-yellow); }
+
+.text-primary   { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent    { color: var(--color-accent); }
+.text-yellow    { color: var(--color-yellow); }
+
+.border-primary   { border-color: var(--color-primary); }
+.border-secondary { border-color: var(--color-secondary); }
+.border-accent    { border-color: var(--color-accent); }
+.border-yellow    { border-color: var(--color-yellow); }
+
+/* Tinted / translucent variants (used for icon chips, hover states) */
+.bg-primary-5    { background-color: color-mix(in srgb, var(--color-primary) 5%, transparent); }
+.bg-primary-10   { background-color: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.bg-secondary-5  { background-color: color-mix(in srgb, var(--color-secondary) 5%, transparent); }
+.bg-secondary-10 { background-color: color-mix(in srgb, var(--color-secondary) 10%, transparent); }
+.bg-accent-5     { background-color: color-mix(in srgb, var(--color-accent) 5%, transparent); }
+.bg-accent-10    { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.bg-yellow-5     { background-color: color-mix(in srgb, var(--color-yellow) 5%, transparent); }
+.bg-yellow-10    { background-color: color-mix(in srgb, var(--color-yellow) 10%, transparent); }
+
+.hover-bg-accent-dark:hover    { background-color: color-mix(in srgb, var(--color-accent) 85%, black); }
+.hover-bg-secondary-dark:hover { background-color: color-mix(in srgb, var(--color-secondary) 85%, black); }
+.hover-bg-primary-dark:hover   { background-color: color-mix(in srgb, var(--color-primary) 85%, black); }
+.hover-bg-yellow-dark:hover    { background-color: color-mix(in srgb, var(--color-yellow) 85%, black); }
+.hover-text-accent:hover       { color: color-mix(in srgb, var(--color-accent) 85%, black); }
+
+.selection-accent::selection { background-color: color-mix(in srgb, var(--color-accent) 20%, transparent); color: var(--color-primary); }
+
+/* Simple fade/scale utilities to replace framer-motion */
+[data-animate] { opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease; }
+[data-animate].is-visible { opacity: 1; transform: translateY(0); }
+
+.mobile-menu { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.mobile-menu.open { max-height: 480px; }
+
+.modal-overlay { transition: opacity .2s ease; }
+.modal-panel { transition: opacity .2s ease, transform .2s ease; }
+
+[data-page] { display: none; }
+[data-page].active { display: block; }
+
+.icon-svg { display: inline-block; vertical-align: middle; }

@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "badge": "Upcoming Event \u2022 September 5th",
+    "title": "UNSHAKEN",
+    "theme": "Rooted & Rising",
+    "paragraph": "A premier leadership and wellness summit uniquely tailored for Canadian newcomer youth. Gain keys to growth, navigate your landscape, and find your family.",
+    "cta_label": "SIGN UP NOW!",
+    "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1200",
+    "image_caption": "A generation connected. Rooted in community, rising together."
+  },
+  "who_we_are": {
+    "eyebrow": "Who We Are",
+    "heading": "Empowering the Future Builders of Canada",
+    "paragraph": "We are dedicated to fostering safe spaces of belonging, support, and hope for immigrant and newcomer youth (ages 15\u201325). We walk alongside them during their transition, preparing them with critical skills to lead and thrive.",
+    "link_label": "Learn More About Our Journey"
+  },
+  "pillars": [
+    { "icon": "compass", "title": "Navigate", "description": "Understand the Canadian academic, social, and professional systems. Receive key resources and guidelines to traverse relocation transitions." },
+    { "icon": "sparkles", "title": "Grow", "description": "Build essential leadership abilities, strengthen psychological confidence, and develop holistic mental wellness under expert guidance." },
+    { "icon": "heart", "title": "Give Back", "description": "Transform from a participant into a community pillars. Lead peer groups, speak, share your journey, and empower newer arrivals." }
+  ],
+  "speakers_preview": {
+    "eyebrow": "Mentors & Leaders",
+    "heading": "Our Professional Speakers",
+    "link_label": "See All Speakers"
+  },
+  "benefits": {
+    "eyebrow": "Benefits",
+    "heading": "Why Newcomers Excel with Us",
+    "items": [
+      { "number": "01", "title": "Safe Community Space", "description": "Connect with peer youths facing identical cultural integration journeys. Real isolation-breaking experiences." },
+      { "number": "02", "title": "Custom Care & Wellness", "description": "Access tailored psychological mental wellbeing programs and counselor circles equipped for immigrant realities." },
+      { "number": "03", "title": "Leadership Accolades", "description": "Earn practical capabilities, run localized events, coordinate tasks, and scale confidence structures." },
+      { "number": "04", "title": "Impact Partnerships", "description": "Link with organizations, potential mentors, education pathways, and Canadian corporate career systems." }
+    ]
+  },
+  "get_involved": {
+    "eyebrow": "Get Involved",
+    "heading": "Four Ways to Connect With Our Mission",
+    "items": [
+      { "icon": "users", "color": "accent", "title": "Join Community", "description": "Become part of a safe, welcoming space of immigrant youth. Build deep friendships, share stories, and grow together.", "button_label": "Join Now", "action": "Join Community" },
+      { "icon": "compass", "color": "secondary", "title": "Become a Mentor", "description": "Guide a newcomer youth through their academic, career, and personal transition in Canada. Share your wisdom and build a legacy.", "button_label": "Apply", "action": "Become a Mentor" },
+      { "icon": "heart", "color": "yellow", "title": "Volunteer", "description": "Support our events, workshops, and wellness circles. Your time and energy can create directly tangible differences in young lives.", "button_label": "Sign Up", "action": "Volunteer" },
+      { "icon": "briefcase", "color": "primary", "title": "Partner With Us", "description": "Collaborate with us as a corporate sponsor, school, or community organization to provide pathways and systemic support.", "button_label": "Partner", "action": "Partner" }
+    ]
+  }
+}
