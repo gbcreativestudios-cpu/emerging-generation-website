@@ -1,18 +1,18 @@
 {
-  "org_name": "The Emerging Generation",
   "org_short": "EG",
-  "org_tagline": "Canada",
-  "logo": "/images/site/logo-colored.svg",
-  "logo_white": "/images/site/logo-white.svg",
+  "org_name": "The Emerging Generation",
+  "nav_cta_label": "Join Community",
+  "logo": "/images/full-stacked-logo-colored-1-500x.webp",
   "colors": {
     "primary": "#0E3A2F",
     "secondary": "#3B945E",
     "accent": "#FF6F43",
     "accent_yellow": "#EAB308"
   },
-  "nav_cta_label": "Join Community",
-  "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
-  "contact_email": "info@emerginggen.org",
+  "org_tagline": "Canada",
   "contact_location": "Toronto, ON, Canada",
-  "footer_note": "Designed and Built with Pride in Canada."
+  "logo_white": "/images/full-stacked-logo-white-500x.webp",
+  "footer_note": "Designed and Built with Pride in Canada.",
+  "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
+  "contact_email": "info@emerginggen.org"
 }
