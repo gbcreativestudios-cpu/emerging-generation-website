@@ -66,8 +66,9 @@ function initModal() {
   document.getElementById('modal-close-btn').addEventListener('click', closeInvolvedModal);
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeInvolvedModal(); });
 
-  document.querySelectorAll('[data-open-modal]').forEach(el => {
-    el.addEventListener('click', () => openInvolvedModal(el.dataset.openModal));
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-open-modal]');
+    if (trigger) openInvolvedModal(trigger.dataset.openModal);
   });
 
   const form = document.getElementById('involved-form');
