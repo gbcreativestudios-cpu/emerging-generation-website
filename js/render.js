@@ -160,22 +160,34 @@ async function renderHomePage() {
       <button data-open-modal="${i.action}" class="w-full text-center bg-${colorMap[i.color]} ${i.color === 'yellow' ? 'text-neutral-900' : 'text-white'} hover-bg-${colorMap[i.color]}-dark font-bold py-3 rounded-xl transition-all shadow-sm focus:outline-none">${i.button_label}</button>
     </div>`).join('');
 
-  document.getElementById('page-content').innerHTML = `
-    <section class="relative overflow-hidden bg-white pt-24 pb-20">
-      <div class="max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
-        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary-10 text-secondary text-xs font-semibold tracking-wider uppercase mb-8">${ICONS.calendar(12)} ${data.hero.badge}</span>
-        <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-primary uppercase leading-none">${data.hero.title}</h1>
-        <span class="block text-2xl md:text-3xl font-extrabold tracking-wide text-secondary uppercase mt-2 mb-6">${data.hero.theme}</span>
-        <p class="text-neutral-500 text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-10">${data.hero.paragraph}</p>
-        <div class="mb-20">
-          <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-black text-lg md:text-xl px-12 py-5 rounded-2xl transition-all shadow-lg hover:scale-[1.02] focus:outline-none flex items-center justify-center min-h-[64px]">${data.hero.cta_label}</button>
-        </div>
-        <div class="w-full max-w-4xl aspect-[21/9] rounded-3xl overflow-hidden shadow-xl border border-neutral-100 relative group">
+  // Paragraph is optional — leave it blank in the CMS to hide it entirely.
+  const heroParagraphHTML = data.hero.paragraph
+    ? `<p class="text-neutral-500 text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-10">${data.hero.paragraph}</p>`
+    : '';
+
+  // Lower photo + caption is optional — toggle "show_photo" off in the CMS to hide it.
+  const heroPhotoHTML = data.hero.show_photo !== false
+    ? `<div class="w-full max-w-4xl aspect-[21/9] rounded-3xl overflow-hidden shadow-xl border border-neutral-100 relative group">
           <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
           <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-8">
             <p class="text-white font-medium text-sm md:text-base backdrop-blur-sm bg-white/10 px-4 py-2 rounded-xl">${data.hero.image_caption}</p>
           </div>
+        </div>`
+    : '';
+
+  document.getElementById('page-content').innerHTML = `
+    <section class="relative overflow-hidden bg-white pt-24 pb-20">
+      <div class="max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary-10 text-secondary text-xs font-semibold tracking-wider uppercase mb-8">${ICONS.calendar(12)} ${data.hero.badge}</span>
+        <!-- Poster replaces the old text title/theme. No fixed aspect ratio —
+             displays at whatever size/shape the uploaded image actually is,
+             just capped so it never overwhelms the page. -->
+        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-auto h-auto max-w-full sm:max-w-lg md:max-w-xl mx-auto mb-6">
+        ${heroParagraphHTML}
+        <div class="mb-20">
+          <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-black text-lg md:text-xl px-12 py-5 rounded-2xl transition-all shadow-lg hover:scale-[1.02] focus:outline-none flex items-center justify-center min-h-[64px]">${data.hero.cta_label}</button>
         </div>
+        ${heroPhotoHTML}
       </div>
     </section>
 

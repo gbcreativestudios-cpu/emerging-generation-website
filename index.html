@@ -6,6 +6,7 @@
 <title>The Emerging Generation — Unshaken</title>
 <meta name="description" content="Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="min-h-screen bg-white text-neutral-800 font-sans flex flex-col justify-between">
@@ -154,6 +155,45 @@
       </form>
     </div>
   </div>
+</div>
+
+<!--
+  Hidden stub forms — not shown to visitors, never displayed or filled in.
+  They exist only so Netlify's deploy-time bot detects and registers each
+  category as its own form (separate dashboard tab + notifications).
+  The one visible modal form (#involved-form) reuses these field names and
+  is submitted via JS with a matching form-name value per category — see
+  ACTION_TO_FORM_NAME in js/main.js.
+-->
+<div hidden aria-hidden="true">
+  <form name="join-community" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="join-community">
+    <input name="bot-field">
+    <input name="firstName"><input name="lastName"><input name="email"><input name="phone">
+    <input name="age"><input name="city"><input name="province"><input name="occupation">
+    <textarea name="interest"></textarea>
+  </form>
+  <form name="become-a-mentor" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="become-a-mentor">
+    <input name="bot-field">
+    <input name="firstName"><input name="lastName"><input name="email"><input name="phone">
+    <input name="age"><input name="city"><input name="province"><input name="occupation">
+    <textarea name="interest"></textarea>
+  </form>
+  <form name="volunteer" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="volunteer">
+    <input name="bot-field">
+    <input name="firstName"><input name="lastName"><input name="email"><input name="phone">
+    <input name="age"><input name="city"><input name="province"><input name="occupation">
+    <textarea name="interest"></textarea>
+  </form>
+  <form name="partner-with-us" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="partner-with-us">
+    <input name="bot-field">
+    <input name="firstName"><input name="lastName"><input name="email"><input name="phone">
+    <input name="age"><input name="city"><input name="province"><input name="occupation">
+    <textarea name="interest"></textarea>
+  </form>
 </div>
 
 <script src="/js/icons.js"></script>

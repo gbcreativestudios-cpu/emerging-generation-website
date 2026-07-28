@@ -30,7 +30,23 @@ const MODAL_SUBMIT_LABELS = {
   'Partner': 'Submit Partnership Form'
 };
 
-function openInvolvedModal(action) {
+// Maps each category to its own registered Netlify form name, so
+// submissions land in separate buckets/notifications per category
+// instead of all sharing one "involved-form" entry.
+const ACTION_TO_FORM_NAME = {
+  'Join Community': 'join-community',
+  'Become a Mentor': 'become-a-mentor',
+  'Volunteer': 'volunteer',
+  'Partner': 'partner-with-us'
+};
+
+// Reverse lookup so a URL like /#become-a-mentor knows which modal to open.
+// Same slugs used for the URL hash and the Netlify form name.
+const HASH_TO_ACTION = Object.fromEntries(
+  Object.entries(ACTION_TO_FORM_NAME).map(([action, slug]) => [slug, action])
+);
+
+function openInvolvedModal(action, updateHash = true) {
   const overlay = document.getElementById('modal-overlay');
   const titleEl = document.getElementById('modal-title');
   const submitBtn = document.getElementById('modal-submit-label');
@@ -42,6 +58,7 @@ function openInvolvedModal(action) {
   form.dataset.action = action;
   form.reset();
   form.querySelector('[name="action"]').value = action;
+  form.querySelector('[name="form-name"]').value = ACTION_TO_FORM_NAME[action] || 'involved-form';
   form.classList.remove('hidden');
   document.getElementById('form-success').classList.add('hidden');
   document.querySelectorAll('#involved-form .field-error').forEach(e => e.textContent = '');
@@ -49,13 +66,25 @@ function openInvolvedModal(action) {
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   setTimeout(() => { const f = overlay.querySelector('button, input'); if (f) f.focus(); }, 0);
+
+  // Give each category a shareable URL, e.g. yoursite.com/#become-a-mentor.
+  // pushState (not a plain hash assignment) so the browser back button
+  // closes the modal instead of just changing the URL underneath it.
+  const slug = ACTION_TO_FORM_NAME[action];
+  if (updateHash && slug && window.location.hash.slice(1) !== slug) {
+    history.pushState({ modal: slug }, '', '#' + slug);
+  }
 }
 
-function closeInvolvedModal() {
+function closeInvolvedModal(updateHash = true) {
   const overlay = document.getElementById('modal-overlay');
   if (!overlay) return;
   overlay.classList.add('hidden');
   document.body.style.overflow = 'unset';
+
+  if (updateHash && window.location.hash) {
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  }
 }
 
 function initModal() {
@@ -70,6 +99,17 @@ function initModal() {
     const trigger = e.target.closest('[data-open-modal]');
     if (trigger) openInvolvedModal(trigger.dataset.openModal);
   });
+
+  // Deep link support: /#join-community, /#become-a-mentor, /#volunteer,
+  // /#partner-with-us each open the matching form directly.
+  window.addEventListener('popstate', () => {
+    const action = HASH_TO_ACTION[window.location.hash.slice(1)];
+    if (action) openInvolvedModal(action, false);
+    else closeInvolvedModal(false);
+  });
+
+  const initialAction = HASH_TO_ACTION[window.location.hash.slice(1)];
+  if (initialAction) openInvolvedModal(initialAction, false);
 
   const form = document.getElementById('involved-form');
   form.addEventListener('submit', (e) => {

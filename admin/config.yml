@@ -54,10 +54,10 @@ collections:
             widget: "object"
             fields:
               - { label: "Badge Text", name: "badge", widget: "string" }
-              - { label: "Big Title", name: "title", widget: "string" }
-              - { label: "Theme Line", name: "theme", widget: "string" }
-              - { label: "Paragraph", name: "paragraph", widget: "text" }
+              - { label: "Poster Image (replaces the title — any size/shape works)", name: "poster_image", widget: "image" }
+              - { label: "Paragraph (leave blank to hide it)", name: "paragraph", widget: "text", required: false }
               - { label: "Button Label", name: "cta_label", widget: "string" }
+              - { label: "Show Lower Photo?", name: "show_photo", widget: "boolean", default: true }
               - { label: "Hero Image", name: "image", widget: "image" }
               - { label: "Image Caption", name: "image_caption", widget: "string" }
           - label: "Who We Are (green section)"

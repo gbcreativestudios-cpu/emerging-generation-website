@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <rect width="800" height="1000" fill="#0f3d2e"/>
+  <rect x="20" y="20" width="760" height="960" fill="none" stroke="#f4a340" stroke-width="4" stroke-dasharray="12 10"/>
+  <text x="400" y="440" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">UNSHAKEN</text>
+  <text x="400" y="500" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#f4a340" text-anchor="middle" letter-spacing="3">ROOTED &amp; RISING</text>
+  <text x="400" y="600" font-family="Arial, sans-serif" font-size="22" fill="#ffffff" text-anchor="middle" opacity="0.75">— Poster placeholder —</text>
+  <text x="400" y="632" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" text-anchor="middle" opacity="0.6">Swap via CMS: Home Page → Hero → Poster Image</text>
+</svg>
