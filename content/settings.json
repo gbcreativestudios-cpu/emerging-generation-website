@@ -3,7 +3,6 @@
   "org_name": "The Emerging Generation",
   "nav_cta_label": "Join Community",
   "logo": "/images/full-stacked-logo-colored-1-500x.webp",
-  "favicon": "/favicon.svg",
   "colors": {
     "primary": "#0E3A2F",
     "secondary": "#3B945E",
@@ -12,6 +11,7 @@
   },
   "org_tagline": "Canada",
   "contact_location": "Toronto, ON, Canada",
+  "favicon": "/images/emerging-fav-2.jpg",
   "logo_white": "/images/full-stacked-logo-white-500x.webp",
   "footer_note": "Designed and Built with Pride in Canada.",
   "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
