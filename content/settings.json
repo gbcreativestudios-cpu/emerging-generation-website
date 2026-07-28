@@ -3,6 +3,7 @@
   "org_name": "The Emerging Generation",
   "nav_cta_label": "Join Community",
   "logo": "/images/full-stacked-logo-colored-1-500x.webp",
+  "favicon": "/favicon.svg",
   "colors": {
     "primary": "#0E3A2F",
     "secondary": "#3B945E",

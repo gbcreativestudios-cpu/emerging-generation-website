@@ -67,6 +67,8 @@ async function renderSettings() {
 
   document.querySelectorAll('[data-logo]').forEach(el => { el.src = settings.logo; el.alt = settings.org_name + ' Logo'; });
   document.querySelectorAll('[data-logo-white]').forEach(el => { el.src = settings.logo_white; el.alt = settings.org_name + ' Logo'; });
+  const faviconEl = document.getElementById('favicon-link');
+  if (faviconEl && settings.favicon) faviconEl.href = settings.favicon;
   document.querySelectorAll('[data-org-name]').forEach(el => el.textContent = settings.org_name);
   document.querySelectorAll('[data-org-tagline]').forEach(el => el.textContent = settings.org_tagline);
   document.querySelectorAll('[data-nav-cta]').forEach(el => el.textContent = settings.nav_cta_label);
@@ -182,7 +184,7 @@ async function renderHomePage() {
         <!-- Poster replaces the old text title/theme. No fixed aspect ratio —
              displays at whatever size/shape the uploaded image actually is,
              just capped so it never overwhelms the page. -->
-        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-auto h-auto max-w-full sm:max-w-lg md:max-w-xl mx-auto mb-6">
+        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-full max-w-4xl h-auto mx-auto mb-6">
         ${heroParagraphHTML}
         <div class="mb-20">
           <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-black text-lg md:text-xl px-12 py-5 rounded-2xl transition-all shadow-lg hover:scale-[1.02] focus:outline-none flex items-center justify-center min-h-[64px]">${data.hero.cta_label}</button>

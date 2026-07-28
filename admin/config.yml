@@ -24,6 +24,7 @@ collections:
           - { label: "Short Name (e.g. logo fallback initials)", name: "org_short", widget: "string" }
           - { label: "Tagline (under name)", name: "org_tagline", widget: "string" }
           - { label: "Header Logo (color)", name: "logo", widget: "image" }
+          - { label: "Favicon (shows in browser tabs)", name: "favicon", widget: "image" }
           - { label: "Footer Logo (white)", name: "logo_white", widget: "image" }
           - label: "Brand Colors"
             name: "colors"
