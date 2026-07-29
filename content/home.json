@@ -1,11 +1,11 @@
 {
   "hero": {
     "badge": "Upcoming Event • September 5th",
-    "poster_image": "/images/white-outline-recovered.png",
+    "poster_image": "/images/banner.png",
     "paragraph": "A premier leadership and wellness summit uniquely tailored for Canadian newcomer youth. Gain keys to growth, navigate your landscape, and find your family.",
     "cta_label": "SIGN UP NOW!",
     "show_photo": true,
-    "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1200",
+    "image": "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
     "image_caption": "A generation connected. Rooted in community, rising together."
   },
   "who_we_are": {
