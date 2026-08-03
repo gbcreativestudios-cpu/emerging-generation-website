@@ -39,6 +39,25 @@ collections:
           - { label: "Contact Email", name: "contact_email", widget: "string" }
           - { label: "Contact Location", name: "contact_location", widget: "string" }
           - { label: "Footer Note (bottom right)", name: "footer_note", widget: "string" }
+          - label: "Social Links (footer icons)"
+            name: "social_links"
+            widget: "list"
+            hint: "Toggle a platform off to hide its icon in the footer without deleting it."
+            fields:
+              - { label: "Platform", name: "platform", widget: "select", options: [
+                  { label: "Email", value: "mail" },
+                  { label: "Instagram", value: "instagram" },
+                  { label: "LinkedIn", value: "linkedin" },
+                  { label: "Facebook", value: "facebook" },
+                  { label: "X / Twitter", value: "twitter" },
+                  { label: "TikTok", value: "tiktok" },
+                  { label: "YouTube", value: "youtube" }
+                ] }
+              - { label: "Label (for accessibility)", name: "label", widget: "string" }
+              - { label: "URL (use mailto: for email)", name: "url", widget: "string" }
+              - { label: "Show in footer?", name: "enabled", widget: "boolean", default: true }
+          - { label: "Form Success Heading", name: "form_success_heading", widget: "string", hint: "Shown after any of the 4 signup forms is submitted." }
+          - { label: "Form Success Message", name: "form_success_message", widget: "text" }
 
   # ------------------------------------------------------------
   # Home page content
@@ -55,6 +74,8 @@ collections:
             widget: "object"
             fields:
               - { label: "Badge Text", name: "badge", widget: "string" }
+              - { label: "Show Countdown Timer?", name: "show_countdown", widget: "boolean", default: true }
+              - { label: "Event Date & Time (used by countdown)", name: "event_date", widget: "datetime", required: false }
               - { label: "Poster Image (replaces the title — any size/shape works)", name: "poster_image", widget: "image" }
               - { label: "Paragraph (leave blank to hide it)", name: "paragraph", widget: "text", required: false }
               - { label: "Button Label", name: "cta_label", widget: "string" }

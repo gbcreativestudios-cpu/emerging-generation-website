@@ -1,6 +1,8 @@
 {
   "hero": {
     "badge": "Upcoming Event • September 5th",
+    "show_countdown": true,
+    "event_date": "2026-09-05T09:00:00",
     "poster_image": "/images/banner.png",
     "paragraph": "A premier leadership and wellness summit uniquely tailored for Canadian newcomer youth. Gain keys to growth, navigate your landscape, and find your family.",
     "cta_label": "SIGN UP NOW!",

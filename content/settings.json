@@ -15,5 +15,12 @@
   "logo_white": "/images/full-stacked-logo-white-500x.webp",
   "footer_note": "Designed and Built with Pride in Canada.",
   "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
-  "contact_email": "info@emerginggen.org"
+  "contact_email": "info@emerginggen.org",
+  "social_links": [
+    { "platform": "mail", "label": "Email", "url": "mailto:info@emerginggen.org", "enabled": true },
+    { "platform": "instagram", "label": "Instagram", "url": "https://instagram.com/", "enabled": true },
+    { "platform": "linkedin", "label": "LinkedIn", "url": "https://linkedin.com/", "enabled": true }
+  ],
+  "form_success_heading": "Submission Complete!",
+  "form_success_message": "Thank you for reaching out. Stella and the coordination team will connect with you via email within 48 business hours."
 }

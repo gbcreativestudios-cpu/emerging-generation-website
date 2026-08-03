@@ -77,6 +77,20 @@ async function renderSettings() {
   document.querySelectorAll('[data-contact-location]').forEach(el => el.textContent = settings.contact_location);
   document.querySelectorAll('[data-footer-note]').forEach(el => el.textContent = settings.footer_note);
   document.querySelectorAll('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
+  document.querySelectorAll('[data-form-success-heading]').forEach(el => el.textContent = settings.form_success_heading);
+  document.querySelectorAll('[data-form-success-message]').forEach(el => el.textContent = settings.form_success_message);
+
+  // Footer social icons — only enabled entries render, in the order
+  // set in the CMS. Each icon links out to whatever URL was entered.
+  const socialContainer = document.querySelector('[data-footer-social]');
+  if (socialContainer) {
+    const links = (settings.social_links || []).filter(s => s.enabled && s.url);
+    socialContainer.innerHTML = links.map(s => `
+      <a href="${s.url}" target="_blank" rel="noopener noreferrer" aria-label="${s.label || s.platform}"
+         class="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+        ${ICONS[s.platform] ? ICONS[s.platform](16) : ''}
+      </a>`).join('');
+  }
 
   return settings;
 }
@@ -168,19 +182,33 @@ async function renderHomePage() {
     : '';
 
   // Lower photo + caption is optional — toggle "show_photo" off in the CMS to hide it.
+  // Mobile gets a taller aspect ratio (more image, less crop) and a smaller,
+  // tighter caption pill so the text/blur overlay doesn't crowd the photo.
   const heroPhotoHTML = data.hero.show_photo !== false
-    ? `<div class="w-full max-w-4xl aspect-[21/9] rounded-3xl overflow-hidden shadow-xl border border-neutral-100 relative group">
+    ? `<div class="w-full max-w-4xl aspect-[3/4] sm:aspect-[16/10] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-xl border border-neutral-100 relative group">
           <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-8">
-            <p class="text-white font-medium text-sm md:text-base backdrop-blur-sm bg-white/10 px-4 py-2 rounded-xl">${data.hero.image_caption}</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-4 md:p-8">
+            <p class="text-white font-medium text-xs sm:text-sm md:text-base backdrop-blur-sm bg-white/10 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl leading-snug max-w-[85%] sm:max-w-none">${data.hero.image_caption}</p>
           </div>
         </div>`
+    : '';
+
+  // Countdown near the date badge is optional — toggle "show_countdown" off
+  // in the CMS to hide it. Requires "event_date" (ISO string) to be set.
+  const heroCountdownHTML = data.hero.show_countdown && data.hero.event_date
+    ? `<div id="hero-countdown" class="flex items-center gap-3 md:gap-4 mb-8" data-event-date="${data.hero.event_date}">
+         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-days>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Days</span></div>
+         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-hours>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Hrs</span></div>
+         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-minutes>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Min</span></div>
+         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-seconds>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Sec</span></div>
+       </div>`
     : '';
 
   document.getElementById('page-content').innerHTML = `
     <section class="relative overflow-hidden bg-white pt-24 pb-20">
       <div class="max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
         <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary-10 text-secondary text-xs font-semibold tracking-wider uppercase mb-8">${ICONS.calendar(12)} ${data.hero.badge}</span>
+        ${heroCountdownHTML}
         <!-- Poster replaces the old text title/theme. No fixed aspect ratio —
              displays at whatever size/shape the uploaded image actually is,
              just capped so it never overwhelms the page. -->
@@ -241,6 +269,39 @@ async function renderHomePage() {
       </div>
     </section>`;
   initFadeIn();
+  initHeroCountdown();
+}
+
+/* Live countdown for the hero date badge. Reads the target date off the
+   #hero-countdown container (set from hero.event_date in the CMS) and
+   ticks every second. If the CMS toggle is off, the container never gets
+   created, so this just quietly does nothing. */
+function initHeroCountdown() {
+  const el = document.getElementById('hero-countdown');
+  if (!el) return;
+  const target = new Date(el.dataset.eventDate).getTime();
+  if (isNaN(target)) return;
+
+  const daysEl = el.querySelector('[data-countdown-days]');
+  const hoursEl = el.querySelector('[data-countdown-hours]');
+  const minutesEl = el.querySelector('[data-countdown-minutes]');
+  const secondsEl = el.querySelector('[data-countdown-seconds]');
+
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      [daysEl, hoursEl, minutesEl, secondsEl].forEach(e => e && (e.textContent = '00'));
+      clearInterval(timer);
+      return;
+    }
+    const pad = n => String(n).padStart(2, '0');
+    daysEl.textContent = pad(Math.floor(diff / 86400000));
+    hoursEl.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    minutesEl.textContent = pad(Math.floor((diff % 3600000) / 60000));
+    secondsEl.textContent = pad(Math.floor((diff % 60000) / 1000));
+  }
+  tick();
+  const timer = setInterval(tick, 1000);
 }
 
 /* ---------- About page ---------- */
