@@ -1,7 +1,28 @@
 {
   "org_short": "EG",
   "org_name": "The Emerging Generation",
+  "social_links": [
+    {
+      "platform": "mail",
+      "label": "Email",
+      "url": "mailto:info@emerginggen.org",
+      "enabled": true
+    },
+    {
+      "platform": "instagram",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/theemerginggeneration?igsh=eXRrd24xOHVycjNr",
+      "enabled": true
+    },
+    {
+      "enabled": true,
+      "platform": "tiktok",
+      "label": "Tiktok",
+      "url": "https://www.tiktok.com/@emerginggeneration?_r=1&_t=ZS-98aQ8AXy4Gm"
+    }
+  ],
   "nav_cta_label": "Join Community",
+  "form_success_heading": "Submission Complete!",
   "logo": "/images/full-stacked-logo-colored-1-500x.webp",
   "colors": {
     "primary": "#0E3A2F",
@@ -9,18 +30,12 @@
     "accent": "#FF6F43",
     "accent_yellow": "#EAB308"
   },
+  "form_success_message": "A member of our team will get back to you within 48 business hours.\nThank you for your patience, we look forward to connecting with you soon.\n",
   "org_tagline": "Canada",
   "contact_location": "Toronto, ON, Canada",
   "favicon": "/images/icon-colored-500x.webp",
-  "logo_white": "/images/full-stacked-logo-white-500x.webp",
+  "logo_white": "/images/icon-white-500x.webp",
   "footer_note": "Designed and Built with Pride in Canada.",
   "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
-  "contact_email": "info@emerginggen.org",
-  "social_links": [
-    { "platform": "mail", "label": "Email", "url": "mailto:info@emerginggen.org", "enabled": true },
-    { "platform": "instagram", "label": "Instagram", "url": "https://instagram.com/", "enabled": true },
-    { "platform": "linkedin", "label": "LinkedIn", "url": "https://linkedin.com/", "enabled": true }
-  ],
-  "form_success_heading": "Submission Complete!",
-  "form_success_message": "Thank you for reaching out. Stella and the coordination team will connect with you via email within 48 business hours."
+  "contact_email": "info@emerginggen.org"
 }
