@@ -24,6 +24,8 @@
   "nav_cta_label": "Join Community",
   "form_success_heading": "Submission Complete!",
   "logo": "/images/full-stacked-logo-colored-1-500x.webp",
+  "logo_height": 64,
+  "footer_logo_height": 64,
   "colors": {
     "primary": "#0E3A2F",
     "secondary": "#3B945E",

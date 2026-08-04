@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = ""
+  command = "node scripts/generate-speakers-manifest.js"
 
 [[headers]]
   for = "/*"

@@ -65,8 +65,8 @@ async function renderSettings() {
   root.setProperty('--color-accent', settings.colors.accent);
   root.setProperty('--color-yellow', settings.colors.accent_yellow);
 
-  document.querySelectorAll('[data-logo]').forEach(el => { el.src = settings.logo; el.alt = settings.org_name + ' Logo'; });
-  document.querySelectorAll('[data-logo-white]').forEach(el => { el.src = settings.logo_white; el.alt = settings.org_name + ' Logo'; });
+  document.querySelectorAll('[data-logo]').forEach(el => { el.src = settings.logo; el.alt = settings.org_name + ' Logo'; if (settings.logo_height) el.style.height = settings.logo_height + 'px'; });
+  document.querySelectorAll('[data-logo-white]').forEach(el => { el.src = settings.logo_white; el.alt = settings.org_name + ' Logo'; if (settings.footer_logo_height) el.style.height = settings.footer_logo_height + 'px'; });
   const faviconEl = document.getElementById('favicon-link');
   if (faviconEl && settings.favicon) faviconEl.href = settings.favicon;
   document.querySelectorAll('[data-org-name]').forEach(el => el.textContent = settings.org_name);
@@ -97,7 +97,10 @@ async function renderSettings() {
 
 /* ---------- Speakers ---------- */
 
-const SPEAKER_FILES = [
+// Fallback only — used if manifest.json is ever missing (e.g. very first
+// deploy before the build script has run once). Normally the manifest,
+// generated fresh on every build, is what drives this.
+const SPEAKER_FILES_FALLBACK = [
   'stella-orji-dada.md',
   'marcus-chen.md',
   'amina-diop.md',
@@ -107,7 +110,16 @@ const SPEAKER_FILES = [
 ];
 
 async function loadAllSpeakers() {
-  const speakers = await Promise.all(SPEAKER_FILES.map(async (file) => {
+  let files;
+  try {
+    const manifestRes = await fetch('/content/speakers/manifest.json?v=' + Date.now());
+    if (!manifestRes.ok) throw new Error('no manifest');
+    files = await manifestRes.json();
+  } catch {
+    files = SPEAKER_FILES_FALLBACK;
+  }
+
+  const speakers = await Promise.all(files.map(async (file) => {
     const res = await fetch('/content/speakers/' + file + '?v=' + Date.now());
     const raw = await res.text();
     const { data, body } = parseFrontmatter(raw);
@@ -119,11 +131,11 @@ async function loadAllSpeakers() {
       experience: data.experience,
       topics: data.topics || [],
       order: Number(data.order || 999),
+      visible: data.visible !== false,
       bio: body
     };
   }));
-  speakers.sort((a, b) => a.order - b.order);
-  return speakers;
+  return speakers.filter(s => s.visible).sort((a, b) => a.order - b.order);
 }
 
 function speakerCardHTML(speaker, large) {
@@ -416,21 +428,21 @@ async function renderAboutPage() {
     </section>
 
     <section class="bg-neutral-50 py-24 border-t border-neutral-100">
-      <div class="max-w-5xl mx-auto px-6">
+      <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-          <div class="md:col-span-5">
+          <div class="md:col-span-4">
             <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-md border border-neutral-200 bg-neutral-100">
               <img src="${data.founder.image}" alt="${data.founder.name}, Founder" class="w-full h-full object-cover" onerror="this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-primary/40', innerHTML: ICONS.user(64)}))">
             </div>
           </div>
-          <div class="md:col-span-7">
+          <div class="md:col-span-8">
             <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.founder.eyebrow}</span>
             <h2 class="text-3xl font-bold text-primary mb-1">${data.founder.name}</h2>
             <p class="text-sm font-semibold text-secondary mb-6">${data.founder.title}</p>
-            <div class="text-neutral-700 space-y-4 leading-relaxed text-sm md:text-base">
+            <div class="text-neutral-700 space-y-4 leading-relaxed text-sm md:text-base max-w-2xl">
               ${data.founder.paragraphs.map(p => `<p>${p}</p>`).join('')}
               <blockquote class="border-l-4 border-accent pl-4 italic text-primary font-semibold my-6 text-base md:text-lg leading-relaxed">"${data.founder.quote}"</blockquote>
-              <p>${data.founder.closing_paragraph}</p>
+              <p class="italic text-primary/80 text-base md:text-lg leading-relaxed pt-2 border-t border-neutral-200">${data.founder.closing_paragraph}</p>
             </div>
           </div>
         </div>

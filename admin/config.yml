@@ -24,8 +24,10 @@ collections:
           - { label: "Short Name (e.g. logo fallback initials)", name: "org_short", widget: "string" }
           - { label: "Tagline (under name)", name: "org_tagline", widget: "string" }
           - { label: "Header Logo (color)", name: "logo", widget: "image" }
+          - { label: "Header Logo Height (px)", name: "logo_height", widget: "number", value_type: "int", default: 64, hint: "Controls the size of the logo in the top navigation bar." }
           - { label: "Favicon (shows in browser tabs)", name: "favicon", widget: "image" }
           - { label: "Footer Logo (white)", name: "logo_white", widget: "image" }
+          - { label: "Footer Logo Height (px)", name: "footer_logo_height", widget: "number", value_type: "int", default: 64, hint: "Controls the size of the logo at the top of the footer." }
           - label: "Brand Colors"
             name: "colors"
             widget: "object"
@@ -246,4 +248,5 @@ collections:
       - { label: "Experience / Background", name: "experience", widget: "string" }
       - { label: "Speaking Topics", name: "topics", widget: "list" }
       - { label: "Display Order", name: "order", widget: "number", value_type: "int", default: 1 }
+      - { label: "Show on site?", name: "visible", widget: "boolean", default: true, hint: "Turn off to hide this speaker without deleting their profile." }
       - { label: "Biography", name: "body", widget: "markdown" }
