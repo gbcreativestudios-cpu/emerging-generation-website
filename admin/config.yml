@@ -219,8 +219,11 @@ collections:
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Photo", name: "image", widget: "image" }
-              - { label: "Bio Paragraphs", name: "paragraphs", widget: "list" }
+              - { label: "Show Story Section?", name: "show_story", widget: "boolean", default: true }
+              - { label: "Story", name: "story", widget: "text", hint: "Paste your bio here. Leave a blank line between paragraphs to break them apart — or leave it as one block if you prefer." }
+              - { label: "Show Pull Quote?", name: "show_quote", widget: "boolean", default: true }
               - { label: "Pull Quote", name: "quote", widget: "text" }
+              - { label: "Show Closing Paragraph?", name: "show_closing", widget: "boolean", default: true }
               - { label: "Closing Paragraph", name: "closing_paragraph", widget: "text" }
           - label: "Get Involved Section Header"
             name: "get_involved"

@@ -351,6 +351,20 @@ async function renderAboutPage() {
       <button data-open-modal="${i.action}" class="w-full text-center bg-${i.color} ${i.color === 'yellow' ? 'text-neutral-900' : 'text-white'} hover-bg-${i.color}-dark font-bold py-3 rounded-xl transition-all shadow-sm focus:outline-none">${i.button_label}</button>
     </div>`).join('');
 
+  // Founder story is split into paragraphs on blank lines — paste it as
+  // one block or with blank lines between paragraphs, either works.
+  // Each of the 3 pieces (story / quote / closing) has its own on/off
+  // toggle in the CMS.
+  const founderStoryHTML = data.founder.show_story !== false
+    ? (data.founder.story || '').split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map(p => `<p>${p}</p>`).join('')
+    : '';
+  const founderQuoteHTML = data.founder.show_quote !== false && data.founder.quote
+    ? `<blockquote class="border-l-4 border-accent pl-4 italic text-primary font-semibold my-6 text-base md:text-lg leading-relaxed">"${data.founder.quote}"</blockquote>`
+    : '';
+  const founderClosingHTML = data.founder.show_closing !== false && data.founder.closing_paragraph
+    ? `<p>${data.founder.closing_paragraph}</p>`
+    : '';
+
   document.getElementById('page-content').innerHTML = `
     <section class="bg-neutral-50 py-24 border-b border-neutral-100">
       <div class="max-w-4xl mx-auto px-6 text-center">
@@ -439,10 +453,10 @@ async function renderAboutPage() {
             <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.founder.eyebrow}</span>
             <h2 class="text-3xl font-bold text-primary mb-1">${data.founder.name}</h2>
             <p class="text-sm font-semibold text-secondary mb-6">${data.founder.title}</p>
-            <div class="text-neutral-700 space-y-4 leading-relaxed text-sm md:text-base max-w-2xl">
-              ${data.founder.paragraphs.map(p => `<p>${p}</p>`).join('')}
-              <blockquote class="border-l-4 border-accent pl-4 italic text-primary font-semibold my-6 text-base md:text-lg leading-relaxed">"${data.founder.quote}"</blockquote>
-              <p class="italic text-primary/80 text-base md:text-lg leading-relaxed pt-2 border-t border-neutral-200">${data.founder.closing_paragraph}</p>
+            <div class="text-neutral-700 space-y-4 leading-relaxed text-sm md:text-base">
+              ${founderStoryHTML}
+              ${founderQuoteHTML}
+              ${founderClosingHTML}
             </div>
           </div>
         </div>
