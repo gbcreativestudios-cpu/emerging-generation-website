@@ -32,10 +32,11 @@ function parseFrontmatter(raw) {
     if (kv) {
       const [, key, value] = kv;
       currentKey = key;
-      if (value.trim() === '') {
+      const trimmed = value.trim();
+      if (trimmed === '' || trimmed === '[]') {
         data[key] = [];
       } else {
-        data[key] = stripQuotes(value.trim());
+        data[key] = stripQuotes(trimmed);
       }
     }
   }
@@ -130,6 +131,7 @@ async function loadAllSpeakers() {
       image: data.image,
       experience: data.experience,
       topics: data.topics || [],
+      showTopics: data.show_topics !== false,
       order: Number(data.order || 999),
       visible: data.visible !== false,
       bio: body
@@ -523,13 +525,14 @@ async function renderSpeakerDetailPage() {
                 <h3 class="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Experience & Background</h3>
                 <p class="text-neutral-600 leading-relaxed text-sm md:text-base">${speaker.experience}</p>
               </div>
+              ${speaker.showTopics && speaker.topics.length > 0 ? `
               <hr class="border-neutral-100">
               <div>
                 <h3 class="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">Key Speaking Topics</h3>
                 <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   ${speaker.topics.map(t => `<li class="flex items-center gap-2 text-neutral-600 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0"></span>${t}</li>`).join('')}
                 </ul>
-              </div>
+              </div>` : ''}
             </div>
           </div>
         </div>

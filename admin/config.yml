@@ -249,7 +249,8 @@ collections:
       - { label: "Position / Title", name: "position", widget: "string" }
       - { label: "Photo", name: "image", widget: "image" }
       - { label: "Experience / Background", name: "experience", widget: "string" }
-      - { label: "Speaking Topics", name: "topics", widget: "list" }
+      - { label: "Show Speaking Topics section?", name: "show_topics", widget: "boolean", default: true, hint: "Turn off to hide this section on their profile entirely, e.g. if left blank." }
+      - { label: "Speaking Topics", name: "topics", widget: "list", required: false }
       - { label: "Display Order", name: "order", widget: "number", value_type: "int", default: 1 }
       - { label: "Show on site?", name: "visible", widget: "boolean", default: true, hint: "Turn off to hide this speaker without deleting their profile." }
       - { label: "Biography", name: "body", widget: "markdown" }
