@@ -6,7 +6,7 @@ experience: Youth Advocate & Caseworker with nearly a decade of experience.
 show_topics: false
 topics: []
 order: 2
-visible: true
+visible: false
 ---
 Innocent Ezigbo brings nearly a decade of experience in the social services sector, with a strong focus on supporting vulnerable and justice-involved youth. Innocent holds a Post-Graduate Diploma in Human Resources Management and an MSc in Psychology. This background informs his approach to advocacy, leadership, and supporting youth through complex life challenges. In his professional roles, he has served as a youth advocate and caseworker, providing individualized support to young people. 
 
