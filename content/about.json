@@ -37,8 +37,8 @@
   },
   "who_we_are": {
     "heading": "Who We Are",
-    "paragraph_1": "The Emerging Generation is a Canadian non-profit organization dedicated to fostering spaces of belonging, empowerment, and hope for immigrant and newcomer youth. We believe that every young person arriving in Canada possesses unique strengths, perspectives, and potential.",
-    "paragraph_2": "Our mission is to walk alongside them during this crucial transition, providing tailored mentorship, leadership training, wellness counseling, and a supportive community. Through our dedicated volunteers and strategic partnerships, we equip youth with the confidence and practical life skills they need to navigate their new home, grow into their capabilities, and give back to their communities."
+    "paragraph_1": "The Emerging Generation is a nonprofit organization dedicated to empowering immigrant and newcomer youth aged 15–25 as they navigate life in Canada. We believe every young person deserves more than simply settling into a new country, they deserve the opportunity to belong, discover their potential, and become confident leaders in their communities.\n",
+    "paragraph_2": "To empower immigrant youth by providing mentorship, life skills, leadership development, wellness support, and meaningful community connections that help them confidently build successful futures in Canada"
   },
   "vision": {
     "eyebrow": "The Future",
@@ -58,11 +58,28 @@
     "title": "Founder & Executive Director",
     "image": "/images/img_1490-tanko-dada-image.jpg",
     "paragraphs": [
-      "As an immigrant arriving in Canada, Stella intimately understands the emotional trials of adjustment, identity negotiation, and systemic pathfinding that young newcomers navigate.",
-      "Armed with a Master’s degree in Social Work and a decade of specialized youth advocacy, she built The Emerging Generation to establish systemic frameworks of integration, ensuring no newcomer feels isolated."
+      "Eight years ago",
+      "I arrived in Canada with my family",
+      "carrying hope for a new beginning. But beneath the excitement was one of the most uncertain seasons of my life. Like many young immigrants",
+      "I quickly realized that starting over wasn't easy. Although I wasn't physically alone",
+      "I often felt lonely. Everything was unfamiliar. I was learning a new way of life",
+      "trying to understand how things worked",
+      "searching for opportunities",
+      "and hoping to find people who truly understood what I was experiencing. Building genuine friendships didn't happen overnight. In fact",
+      "it took nearly two years before I could confidently say",
+      "\"This person is my friend.\" Finding meaningful employment was another challenge. Like many newcomers",
+      "I faced rejection",
+      "uncertainty",
+      "and moments of self-doubt. There were days when I questioned whether I would ever truly feel at home. Looking back",
+      "I realize that what I needed most wasn't just information",
+      "I needed people. I needed community. I needed mentors. I needed someone who could simply say",
+      "\"I've been where you are",
+      "and you're going to be okay.\" I wished I had a big sister—someone who understood the journey and could walk alongside me as I navigated this new chapter of life. That experience never left me. As the years passed",
+      "I had the privilege of working with young people from different backgrounds",
+      "and I kept hearing stories that sounded so much like my own. Different countries. Different cultures. But the same questions:"
     ],
-    "quote": "When I think about why The Emerging Generation exists, I think about every young person who has ever walked into a new country and wondered if they'd ever truly belong. I've seen how disorienting it can be—navigating unfamiliar systems, building confidence in a new environment, holding onto who you are while discovering who you're becoming.",
-    "closing_paragraph": "It's not just about settling in. It's about being seen, being valued, and being given the tools to lead. That's what this organization was built for. Every workshop, every mentorship pairing, every conversation we create is rooted in one belief: every young immigrant deserves a place to belong, a community to grow with, and the opportunity to become the leader they were created to be. This is more than a program. It's a promise, and I'm honored to walk this journey alongside every young person who's part of it."
+    "quote": "Where do I belong?\"\n\"Will I ever feel at home?\"\n\"Who can I talk to?",
+    "closing_paragraph": "That's when I realized something had to change.\nThe Emerging Generation was born from that realization.\nI didn't create this organization simply to help young immigrants settle in Canada. I created it to ensure they never have to navigate the journey alone.\nMy vision is to build the kind of community I wish I had when I first arrived, a place where young people find belonging before loneliness, encouragement before discouragement, guidance instead of confusion, and mentors who genuinely care.\nAt The Emerging Generation, we believe every young immigrant deserves a safe space to grow, meaningful relationships that inspire confidence, and opportunities to become the leaders they were created to be.\nToday, I look back with gratitude for my own journey because it gave me a purpose much greater than myself.\nIf The Emerging Generation can help even one young person feel seen, supported, and confident enough to embrace their future, then every step of my journey has been worth it.\nWelcome to The Emerging Generation.\nYou don't have to navigate this journey alone.\n"
   },
   "get_involved": {
     "eyebrow": "Next Steps",
@@ -71,7 +88,7 @@
   "why_us": {
     "eyebrow": "Our Core Edge",
     "heading": "Why The Emerging Generation?",
-    "paragraph": "Unlike general settlement agencies, we tailor our focus entirely around leadership development and community support systems. We believe newcomer youth shouldn't just adapt—they should be equipped to build Canada’s tomorrow."
+    "paragraph": "The Emerging Generation exists to walk alongside young people beyond settlement. We provide the support, relationships, and opportunities they need to grow into confident, connected, and purpose-driven leaders. We don't just help young people settle, we help them thrive."
   },
   "hero": {
     "eyebrow": "Our Identity",
@@ -86,7 +103,7 @@
   "who_we_serve": {
     "eyebrow": "Target Demographic",
     "heading": "Who We Serve",
-    "paragraph": "We exclusively focus on immigrant and newcomer youth in Canada (ages 15–25). This is a critical age group where foundational educational choices occur alongside complex cultural navigation, and we ensure they receive complete support systems to thrive.",
+    "paragraph": "We serve immigrant and newcomer youth aged 15–25, including:\n• International Students\n• Permanent Residents\n• Refugees\n• Protected Persons\n• Canadian-born children of immigrant families\n• Newcomer youth beginning a new chapter in Canada",
     "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=600"
   }
 }
