@@ -3,6 +3,7 @@ name: Innocent Ezigbo
 position: Youth Advocate / Youth Caseworker
 image: /images/whatsapp-image-2026-07-25-at-3.20.46-am.jpeg
 experience: Youth Advocate & Caseworker with nearly a decade of experience.
+show_topics: false
 topics: []
 order: 2
 visible: true
