@@ -24,8 +24,6 @@
   "nav_cta_label": "Join Community",
   "form_success_heading": "Submission Complete!",
   "logo": "/images/full-stacked-logo-colored-1-500x.webp",
-  "logo_height": 64,
-  "footer_logo_height": 64,
   "colors": {
     "primary": "#0E3A2F",
     "secondary": "#3B945E",
@@ -34,10 +32,12 @@
   },
   "form_success_message": "A member of our team will get back to you within 48 business hours.\nThank you for your patience, we look forward to connecting with you soon.\n",
   "org_tagline": "Canada",
-  "contact_location": "Toronto, ON, Canada",
+  "contact_location": "Calgary, Alberta, Canada",
   "favicon": "/images/icon-colored-500x.webp",
   "logo_white": "/images/icon-white-500x.webp",
   "footer_note": "Designed and Built with Pride in Canada.",
   "footer_blurb": "Empowering Canadian immigrant and newcomer youth to confidently step into leadership, construct community, and experience true belonging.",
+  "footer_logo_height": 55,
+  "logo_height": 64,
   "contact_email": "info@emerginggen.org"
 }
