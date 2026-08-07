@@ -1,6 +1,7 @@
 ---
-name: Charles obasi
+name: Charles Obasi
 position: Event Anchor
+image: /images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg
 show_topics: false
 order: 3
 visible: true
