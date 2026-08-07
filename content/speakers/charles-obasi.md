@@ -2,7 +2,7 @@
 name: Charles Obasi
 position: Event Anchor
 image: /images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg
-experience: Making memories and haring smiles
+experience: Making memories and sharing smiles
 show_topics: false
 order: 3
 visible: true
