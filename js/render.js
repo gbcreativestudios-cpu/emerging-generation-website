@@ -204,7 +204,7 @@ async function renderHomePage() {
   // still lives on the <img>, or the caption overlay pinned to the frame.
   const heroPhotoHTML = data.hero.show_photo !== false
     ? `<div class="parallax-frame w-full max-w-4xl aspect-[4/3] sm:aspect-[16/10] md:aspect-[21/9] rounded-3xl shadow-xl border border-neutral-100 group">
-          <div class="parallax-layer" data-parallax-layer>
+          <div class="parallax-layer" data-parallax-layer data-parallax-speed="0.14" data-parallax-max="24">
             <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-4 md:p-8">
@@ -231,8 +231,10 @@ async function renderHomePage() {
         ${heroCountdownHTML}
         <!-- Poster replaces the old text title/theme. No fixed aspect ratio —
              displays at whatever size/shape the uploaded image actually is,
-             just capped so it never overwhelms the page. -->
-        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-full max-w-4xl h-auto mx-auto mb-6">
+             just capped so it never overwhelms the page. Moves gently on
+             scroll (own speed/range vs. the lower photo below) so the hero
+             reads as a layered scroll parallax rather than one image alone. -->
+        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-full max-w-4xl h-auto mx-auto mb-6" data-parallax-layer data-parallax-speed="0.08" data-parallax-max="14">
         ${heroParagraphHTML}
         <div class="mb-20">
           <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-black text-lg md:text-xl px-12 py-5 rounded-2xl transition-all shadow-lg hover:scale-[1.02] focus:outline-none flex items-center justify-center min-h-[64px]">${data.hero.cta_label}</button>

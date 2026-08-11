@@ -62,12 +62,27 @@ body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif
 .icon-svg { display: inline-block; vertical-align: middle; }
 
 /* ============================================================
-   Page load animation
-   #page-content starts hidden/slightly lowered, then main.js
-   flips on `.is-loaded` (double rAF, after content is injected)
-   so every page — including CMS-driven ones — fades + rises in
-   once its content actually exists, not before.
+   Page load animation — hero-first choreography
+   Header, main (#page-content, holding the hero), and footer
+   all start hidden. main.js reveals #page-content the instant
+   its content exists (see revealPageContent()), then reveals
+   header/footer a beat later — so the hero is always the first
+   thing to appear, never the nav bar sitting there alone while
+   the hero is still loading.
    ============================================================ */
+body > header,
+body > footer {
+  opacity: 0;
+  transition: opacity .5s ease, transform .5s ease;
+}
+body > header { transform: translateY(-14px); }
+body > footer { transform: translateY(14px); }
+body > header.is-loaded,
+body > footer.is-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #page-content {
   opacity: 0;
   transform: translateY(14px);
@@ -89,6 +104,8 @@ body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif
 }
 
 @media (prefers-reduced-motion: reduce) {
+  body > header,
+  body > footer,
   #page-content { opacity: 1; transform: none; transition: none; }
   .page-fade-auto { animation: none; }
 }

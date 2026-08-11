@@ -166,37 +166,66 @@ function initFadeIn() {
 }
 
 // Fades/rises #page-content in once its innerHTML has actually been
-// set by a render*() function. Called from js/render.js right after
-// each render function finishes, same spot initFadeIn() is called.
-// Double rAF makes sure the browser paints the opacity:0 starting
-// state first, otherwise the transition can get skipped.
+// set by a render*() function, then brings the header/footer in a
+// beat later — so the hero is always the first thing on screen,
+// never the nav bar sitting there alone while the hero is still
+// loading. Double rAF makes sure the browser paints the opacity:0
+// starting state first, otherwise the transition can get skipped.
 function revealPageContent() {
-  const el = document.getElementById('page-content');
-  if (!el) return;
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-loaded')));
+  const main = document.getElementById('page-content');
+  if (!main) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    main.classList.add('is-loaded');
+    setTimeout(revealChrome, 180);
+  }));
 }
 
+function revealChrome() {
+  const header = document.querySelector('body > header');
+  const footer = document.querySelector('body > footer');
+  if (header) header.classList.add('is-loaded');
+  if (footer) footer.classList.add('is-loaded');
+}
+
+// Safety net: if a content fetch ever stalls or fails, don't leave the
+// visitor staring at a blank page — force everything visible after 3s.
+setTimeout(() => {
+  const main = document.getElementById('page-content');
+  if (main && !main.classList.contains('is-loaded')) main.classList.add('is-loaded');
+  revealChrome();
+}, 3000);
+
 // Subtle scroll-linked parallax for elements marked [data-parallax-layer].
-// Moves the layer a few px against scroll direction, clamped so it stays
-// noticeable without ever drifting far enough to expose the buffer edges
-// baked into .parallax-layer's -8% top/bottom offset (see style.css).
+// Two flavors:
+//  - framed layers (inside a .parallax-frame, e.g. the hero photo) move
+//    relative to their frame, which has buffer room baked into its CSS
+//    so translating never exposes an edge.
+//  - unframed layers (e.g. the hero poster image, sitting directly on
+//    the white page background) move relative to themselves — fine
+//    since there's no crop to protect.
+// Each layer can tune its own feel via data-parallax-speed / -max, so
+// multiple hero visuals can move at slightly different rates and read
+// as genuine scroll depth rather than one image nudging on its own.
 function initParallax() {
   const layers = document.querySelectorAll('[data-parallax-layer]');
   if (!layers.length) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const SPEED = 0.12;
-  const MAX_OFFSET = 22; // px
+  const DEFAULT_SPEED = 0.12;
+  const DEFAULT_MAX = 22; // px
 
   let ticking = false;
   function update() {
     const viewportCenter = window.innerHeight / 2;
     layers.forEach(layer => {
-      const frame = layer.parentElement;
-      const rect = frame.getBoundingClientRect();
-      const frameCenter = rect.top + rect.height / 2;
-      let offset = (viewportCenter - frameCenter) * SPEED;
-      offset = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, offset));
+      const frame = layer.closest('.parallax-frame');
+      const ref = frame || layer;
+      const speed = parseFloat(layer.dataset.parallaxSpeed) || DEFAULT_SPEED;
+      const maxOffset = parseFloat(layer.dataset.parallaxMax) || DEFAULT_MAX;
+      const rect = ref.getBoundingClientRect();
+      const refCenter = rect.top + rect.height / 2;
+      let offset = (viewportCenter - refCenter) * speed;
+      offset = Math.max(-maxOffset, Math.min(maxOffset, offset));
       layer.style.transform = `translateY(${offset.toFixed(1)}px)`;
     });
     ticking = false;
