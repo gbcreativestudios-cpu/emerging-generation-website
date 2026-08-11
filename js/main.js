@@ -165,6 +165,53 @@ function initFadeIn() {
   els.forEach(el => io.observe(el));
 }
 
+// Fades/rises #page-content in once its innerHTML has actually been
+// set by a render*() function. Called from js/render.js right after
+// each render function finishes, same spot initFadeIn() is called.
+// Double rAF makes sure the browser paints the opacity:0 starting
+// state first, otherwise the transition can get skipped.
+function revealPageContent() {
+  const el = document.getElementById('page-content');
+  if (!el) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-loaded')));
+}
+
+// Subtle scroll-linked parallax for elements marked [data-parallax-layer].
+// Moves the layer a few px against scroll direction, clamped so it stays
+// noticeable without ever drifting far enough to expose the buffer edges
+// baked into .parallax-layer's -8% top/bottom offset (see style.css).
+function initParallax() {
+  const layers = document.querySelectorAll('[data-parallax-layer]');
+  if (!layers.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const SPEED = 0.12;
+  const MAX_OFFSET = 22; // px
+
+  let ticking = false;
+  function update() {
+    const viewportCenter = window.innerHeight / 2;
+    layers.forEach(layer => {
+      const frame = layer.parentElement;
+      const rect = frame.getBoundingClientRect();
+      const frameCenter = rect.top + rect.height / 2;
+      let offset = (viewportCenter - frameCenter) * SPEED;
+      offset = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, offset));
+      layer.style.transform = `translateY(${offset.toFixed(1)}px)`;
+    });
+    ticking = false;
+  }
+  function onScrollOrResize() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScrollOrResize, { passive: true });
+  window.addEventListener('resize', onScrollOrResize);
+  update();
+}
+
 function initStaticIcons() {
   const menuBtn = document.getElementById('mobile-menu-btn');
   if (menuBtn) menuBtn.innerHTML = ICONS.menu(24);

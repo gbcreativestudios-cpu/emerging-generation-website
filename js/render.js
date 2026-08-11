@@ -196,11 +196,17 @@ async function renderHomePage() {
     : '';
 
   // Lower photo + caption is optional — toggle "show_photo" off in the CMS to hide it.
-  // Mobile gets a taller aspect ratio (more image, less crop) and a smaller,
-  // tighter caption pill so the text/blur overlay doesn't crowd the photo.
+  // Mobile now gets a shorter aspect ratio (was 3/4, quite tall) so the
+  // hero photo doesn't push the fold down as far on phones. sm/md keep
+  // their previous ratios. The image itself moved into a .parallax-layer
+  // (see css/style.css + initParallax in js/main.js) so it can be nudged
+  // vertically on scroll without disturbing the hover-zoom transform that
+  // still lives on the <img>, or the caption overlay pinned to the frame.
   const heroPhotoHTML = data.hero.show_photo !== false
-    ? `<div class="w-full max-w-4xl aspect-[3/4] sm:aspect-[16/10] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-xl border border-neutral-100 relative group">
-          <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+    ? `<div class="parallax-frame w-full max-w-4xl aspect-[4/3] sm:aspect-[16/10] md:aspect-[21/9] rounded-3xl shadow-xl border border-neutral-100 group">
+          <div class="parallax-layer" data-parallax-layer>
+            <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+          </div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-4 md:p-8">
             <p class="text-white font-medium text-xs sm:text-sm md:text-base backdrop-blur-sm bg-white/10 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl leading-snug max-w-[85%] sm:max-w-none">${data.hero.image_caption}</p>
           </div>
@@ -284,6 +290,8 @@ async function renderHomePage() {
     </section>`;
   initFadeIn();
   initHeroCountdown();
+  initParallax();
+  revealPageContent();
 }
 
 /* Live countdown for the hero date badge. Reads the target date off the
@@ -475,6 +483,7 @@ async function renderAboutPage() {
       </div>
     </section>`;
   initFadeIn();
+  revealPageContent();
 }
 
 /* ---------- Speakers list page ---------- */
@@ -492,6 +501,7 @@ async function renderSpeakersPage() {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">${speakers.map(s => speakerCardHTML(s, true)).join('')}</div>
       </div>
     </div>`;
+  revealPageContent();
 }
 
 /* ---------- Speaker detail page ---------- */
@@ -539,4 +549,5 @@ async function renderSpeakerDetailPage() {
       </div>
     </div>`;
   document.title = speaker.name + ' — The Emerging Generation';
+  revealPageContent();
 }
