@@ -1,8 +1,10 @@
 ---
 name: "Aisha Yahaya "
+position: Youth coach, Mentor, Facilitator,
 image: /images/whatsapp-image-2026-08-24-at-10.39.19-pm.jpeg
-experience: Youth coach, Mentor, Facilitator,
+experience: ""
 show_topics: true
+topics: []
 order: 2
 visible: true
 ---
