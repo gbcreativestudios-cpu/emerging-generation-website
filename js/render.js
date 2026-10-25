@@ -613,11 +613,15 @@ async function renderSpeakerDetailPage() {
 }
 
 
-/* ---------- Gallery page ---------- */
-/* An image dump: no titles or captions. Click any photo to open it full
-   screen, then move through the rest with the arrows, the keyboard
-   (← → Esc) or by swiping. Videos sit in their own section lower down.
-   Photos and videos come from content/gallery.json (Decap → Gallery). */
+/* ---------- Gallery ---------- */
+/* Two levels:
+     /gallery.html              → page title, a "Photos" section of album
+                                  thumbnails (each with a title) and a
+                                  "Videos" section of video thumbnails.
+     /gallery.html?album=<slug> → one album: its photos as an image dump,
+                                  click any photo to open it full screen and
+                                  move through the rest.
+   Everything comes from content/gallery.json (Decap → Gallery). */
 
 // Local images go through Netlify's image resizer so phone-sized originals
 // don't make the page heavy. If that isn't available (e.g. a local preview)
@@ -626,81 +630,176 @@ function galleryImg(path, width) {
   if (!path || /^https?:/i.test(path)) return path;
   return '/.netlify/images?url=' + encodeURIComponent(path) + '&w=' + width;
 }
+const GALLERY_IMG_FALLBACK = 'onerror="this.onerror=null;this.src=this.dataset.orig"';
+
+function gallerySlug(title) {
+  return String(title || '').toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim()
+    .replace(/\s+/g, '-').replace(/-+/g, '-') || 'album';
+}
+
+// Albums with at least one photo, each with a unique URL slug.
+function galleryAlbums(data) {
+  const seen = {};
+  return (data.albums || []).map(a => {
+    let photos = [].concat(a.photos || []).filter(Boolean);
+    if (a.newest_first) photos = photos.slice().reverse();
+    let slug = gallerySlug(a.title);
+    seen[slug] = (seen[slug] || 0) + 1;
+    if (seen[slug] > 1) slug += '-' + seen[slug];
+    return { title: a.title || 'Untitled album', slug, photos, cover: a.cover || photos[0] };
+  }).filter(a => a.photos.length);
+}
 
 function parseGalleryVideo(v) {
   if (!v) return null;
+  const base = { title: v.title || '', custom: v.thumbnail || '' };
   const url = (v.video_url || '').trim();
   if (url) {
     const yt = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/);
-    if (yt) return { kind: 'youtube', id: yt[1] };
+    if (yt) return { ...base, kind: 'youtube', id: yt[1] };
     const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-    if (vm) return { kind: 'vimeo', id: vm[1] };
+    if (vm) return { ...base, kind: 'vimeo', id: vm[1] };
   }
-  if (v.video_file) return { kind: 'file', src: v.video_file };
+  if (v.video_file) return { ...base, kind: 'file', src: v.video_file };
   return null;
 }
 
-function galleryVideoHTML(v) {
-  if (v.kind === 'file') {
-    return `<div class="video-card" data-animate><video controls preload="metadata" playsinline src="${encodeURI(v.src)}"></video></div>`;
+// Thumbnail for a video card. A custom image wins; otherwise it's picked up
+// automatically: YouTube's own frame, Vimeo's own frame (fetched after the
+// page draws), or the first moments of an uploaded file.
+function galleryVideoCardHTML(v) {
+  let thumb = '';
+  if (v.custom) {
+    thumb = `<img src="${galleryImg(v.custom, 900)}" data-orig="${encodeURI(v.custom)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK}>`;
+  } else if (v.kind === 'youtube') {
+    thumb = `<img src="https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg" alt="" loading="lazy" decoding="async"
+      onload="if(this.naturalWidth<=120){this.onload=null;this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'}"
+      onerror="this.onerror=function(){this.remove()};this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'">`;
+  } else if (v.kind === 'file') {
+    thumb = `<video src="${encodeURI(v.src)}#t=0.5" muted playsinline preload="metadata" tabindex="-1" aria-hidden="true"></video>`;
   }
-  const embed = v.kind === 'youtube'
-    ? `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`
-    : `https://player.vimeo.com/video/${v.id}?autoplay=1`;
-  const thumb = v.kind === 'youtube'
-    ? `<img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy" decoding="async">`
-    : '';
-  return `<div class="video-card" data-animate>
-      <button type="button" class="video-poster" data-embed="${embed}" aria-label="Play video">
-        ${thumb}<span class="video-play">${ICONS.play(28)}</span>
-      </button>
+  const data = v.kind === 'file' ? `data-file="${encodeURI(v.src)}"`
+    : v.kind === 'youtube' ? `data-embed="https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0"`
+    : `data-embed="https://player.vimeo.com/video/${v.id}?autoplay=1" data-vimeo="${v.id}"`;
+  return `
+    <div data-animate>
+      <div class="video-card">
+        <button type="button" class="video-poster" ${data} aria-label="Play video${v.title ? ': ' + v.title : ''}">
+          ${thumb}<span class="video-play">${ICONS.play(28)}</span>
+        </button>
+      </div>
+      ${v.title ? `<p class="mt-3 font-semibold text-primary leading-snug">${v.title}</p>` : ''}
     </div>`;
+}
+
+function initGalleryVideos() {
+  document.querySelectorAll('.video-poster').forEach(btn => btn.addEventListener('click', () => {
+    if (btn.dataset.file) {
+      const vid = document.createElement('video');
+      vid.src = decodeURI(btn.dataset.file); vid.controls = true; vid.autoplay = true; vid.playsInline = true;
+      btn.replaceWith(vid);
+    } else {
+      const frame = document.createElement('iframe');
+      frame.src = btn.dataset.embed;
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      frame.title = 'Event video';
+      btn.replaceWith(frame);
+    }
+  }));
+  // Vimeo hands out its thumbnails through a public lookup
+  document.querySelectorAll('.video-poster[data-vimeo]').forEach(btn => {
+    if (btn.querySelector('img')) return;
+    fetch('https://vimeo.com/api/oembed.json?width=1280&url=' + encodeURIComponent('https://vimeo.com/' + btn.dataset.vimeo))
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(info => {
+        if (!info.thumbnail_url) return;
+        const img = new Image();
+        img.alt = ''; img.decoding = 'async'; img.src = info.thumbnail_url;
+        btn.prepend(img);
+      })
+      .catch(() => { /* keep the plain green placeholder */ });
+  });
 }
 
 async function renderGalleryPage() {
   let data = {};
   try { data = await loadJSON('/content/gallery.json'); } catch (e) { /* empty gallery */ }
+  const albums = galleryAlbums(data);
+  const slug = new URLSearchParams(window.location.search).get('album');
+  if (slug) {
+    const album = albums.find(a => a.slug === slug);
+    if (album) return renderGalleryAlbum(album, data);
+  }
+  return renderGalleryIndex(albums, data);
+}
 
-  let photos = [].concat(data.photos || []).filter(Boolean);
-  if (data.newest_first !== false) photos = photos.slice().reverse();
+function renderGalleryIndex(albums, data) {
   const videos = (data.videos || []).map(parseGalleryVideo).filter(Boolean);
+  const title = data.page_title || 'Gallery';
+  document.title = title + ' — The Emerging Generation';
 
-  const label = (text) => text ? `<p class="text-xs font-bold text-secondary uppercase tracking-widest mb-5">${text}</p>` : '';
+  const sectionHead = (text) => text ? `<h2 class="text-2xl md:text-3xl font-bold text-primary tracking-tight mb-8">${text}</h2>` : '';
 
-  const photosHTML = photos.length ? `
+  const albumsHTML = albums.length ? `
     <section>
-      ${label(data.photos_label)}
-      <div class="gallery-grid">
-        ${photos.map((src, i) => `
-          <button type="button" class="gallery-item" data-index="${i}" data-animate aria-label="Open photo ${i + 1} of ${photos.length}">
-            <img src="${galleryImg(src, 700)}" data-orig="${encodeURI(src)}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=this.dataset.orig">
-          </button>`).join('')}
+      ${sectionHead(data.photos_heading)}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        ${albums.map(a => `
+          <a href="/gallery.html?album=${encodeURIComponent(a.slug)}" class="block bg-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-md transition-all group" data-animate>
+            <div class="aspect-[4/3] overflow-hidden bg-neutral-100">
+              <img src="${galleryImg(a.cover, 900)}" data-orig="${encodeURI(a.cover)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-6">
+              <h3 class="font-bold text-lg text-primary group-hover:text-secondary transition-colors leading-snug">${a.title}</h3>
+              <p class="text-sm text-neutral-500 font-medium mt-1">${a.photos.length} ${a.photos.length === 1 ? 'photo' : 'photos'}</p>
+            </div>
+          </a>`).join('')}
       </div>
     </section>` : '';
 
   const videosHTML = videos.length ? `
-    <section class="${photos.length ? 'mt-16 md:mt-24' : ''}">
-      ${label(data.videos_label)}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">${videos.map(galleryVideoHTML).join('')}</div>
+    <section class="${albums.length ? 'mt-16 md:mt-24' : ''}">
+      ${sectionHead(data.videos_heading)}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">${videos.map(galleryVideoCardHTML).join('')}</div>
     </section>` : '';
 
-  const emptyHTML = (!photos.length && !videos.length)
-    ? '<p class="text-center text-neutral-400 py-24">Photos and videos from our events will appear here.</p>' : '';
+  const emptyHTML = (!albums.length && !videos.length)
+    ? '<p class="text-center text-neutral-400 py-16">Photos and videos from our events will appear here.</p>' : '';
 
   document.getElementById('page-content').innerHTML = `
-    <div class="bg-white py-10 md:py-16">
-      <div class="max-w-7xl mx-auto px-4 md:px-6">${photosHTML}${videosHTML}${emptyHTML}</div>
+    <div class="bg-white py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-14 md:mb-20">
+          <h1 class="text-4xl md:text-5xl font-bold text-primary tracking-tight">${title}</h1>
+          ${data.page_intro ? `<p class="text-neutral-500 text-sm md:text-base mt-4 max-w-xl mx-auto">${data.page_intro}</p>` : ''}
+        </div>
+        ${albumsHTML}${videosHTML}${emptyHTML}
+      </div>
     </div>`;
+  initGalleryVideos();
+  initFadeIn();
+  revealPageContent();
+}
 
-  initGalleryLightbox(photos);
-  document.querySelectorAll('.video-poster').forEach(btn => btn.addEventListener('click', () => {
-    const frame = document.createElement('iframe');
-    frame.src = btn.dataset.embed;
-    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    frame.allowFullscreen = true;
-    frame.title = 'Event video';
-    btn.replaceWith(frame);
-  }));
+function renderGalleryAlbum(album, data) {
+  document.title = album.title + ' — The Emerging Generation';
+  document.getElementById('page-content').innerHTML = `
+    <div class="bg-white py-12 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="px-2 md:px-0 mb-10 md:mb-14">
+          <a href="/gallery.html" class="inline-flex items-center gap-2 text-sm font-bold text-neutral-500 hover:text-primary mb-6 transition-colors focus:outline-none">${ICONS.arrowLeft(16)} Back to ${data.page_title || 'Gallery'}</a>
+          <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight">${album.title}</h1>
+        </div>
+        <div class="gallery-grid">
+          ${album.photos.map((src, i) => `
+            <button type="button" class="gallery-item" data-index="${i}" data-animate aria-label="Open photo ${i + 1} of ${album.photos.length}">
+              <img src="${galleryImg(src, 700)}" data-orig="${encodeURI(src)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK}>
+            </button>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  initGalleryLightbox(album.photos);
   initFadeIn();
   revealPageContent();
 }

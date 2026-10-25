@@ -1,7 +1,8 @@
 {
-  "photos": [],
-  "newest_first": true,
-  "photos_label": "",
-  "videos_label": "Videos",
+  "page_title": "Gallery",
+  "page_intro": "Moments from our events, past and present.",
+  "photos_heading": "Photos",
+  "albums": [],
+  "videos_heading": "Videos",
   "videos": []
 }
