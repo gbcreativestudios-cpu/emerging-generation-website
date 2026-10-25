@@ -212,9 +212,8 @@ async function renderHomePage() {
 
   document.getElementById('page-content').innerHTML = `
     <section class="hero" id="hero">
-      <span class="hero-shape hero-shape--arc" aria-hidden="true"></span>
-      <span class="hero-shape hero-shape--slash-a" aria-hidden="true"></span>
-      <span class="hero-shape hero-shape--slash-b" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--orange" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--green" aria-hidden="true"></span>
 
       <div class="hero-card-wrap">
         <div class="hero-card">
@@ -224,7 +223,7 @@ async function renderHomePage() {
           </h1>
           ${heroSubHTML}
           <div class="hero-cta-row">
-            <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-semibold text-base md:text-lg px-6 py-3 md:px-7 rounded-xl transition-all shadow-md focus:outline-none">${hero.cta_label}</button>
+            <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-semibold text-base h-12 px-6 inline-flex items-center justify-center rounded-xl transition-all shadow-md focus:outline-none">${hero.cta_label}</button>
           </div>
         </div>
       </div>

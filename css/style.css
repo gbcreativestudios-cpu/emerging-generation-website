@@ -160,42 +160,45 @@ body > footer.is-loaded {
 
 /* ============================================================
    Home hero — green card + group photo + scrolling ticker
-   Desktop: card centred, button bottom-right, photo overlaps the
-   card's bottom edge. Mobile: whole hero fills the screen height
-   (minus the 5rem header), button sits right under the text, photo
-   keeps its height and crops sideways, ticker pinned to the bottom.
+   The hero is exactly one screen tall (under the header) on desktop,
+   so the ticker is always visible. Everything in the card scales with
+   --s (the smaller of 1% of screen height / 0.62% of width), so a short
+   or wide window shrinks the card instead of pushing the ticker off
+   screen. If space runs out, the group photo crops from the bottom
+   (it tucks behind the ticker) rather than anything else being cut.
+   Mobile: the hero fills the phone's height, button sits right under
+   the text, photo crops sideways, ticker pinned to the bottom.
    ============================================================ */
 .hero {
+  --hero-green: #3BB87B;
+  --hero-orange: #F2A04A;
+  --u: 2.3vw;                       /* ring size unit: bigger on phones */
+  --hero-overlap: 1.75rem;
   position: relative;
   overflow: hidden;
   background: #fff;
   display: flex;
   flex-direction: column;
-  --hero-overlap: 1.75rem;
   min-height: calc(100vh - 5.25rem);
   min-height: calc(100svh - 5.25rem);
 }
 
-/* Decorative shapes sit behind everything */
-.hero-shape { position: absolute; pointer-events: none; z-index: 0; }
-.hero-shape--arc {
-  left: -230px; top: 34%;
-  width: 520px; height: 520px;
-  border-radius: 9999px;
-  border: 72px solid #F2A04A;
+/* Big thick rings behind everything (cropped by the screen edges on purpose).
+   Sized from the reference design: orange ring bottom-left, green ring right. */
+.hero-ring {
+  position: absolute; z-index: 0; pointer-events: none;
+  box-sizing: border-box; aspect-ratio: 1; border-radius: 9999px;
+  transform: translate(-50%, -50%);
 }
-.hero-shape--slash-a {
-  top: 0; left: 56%;
-  width: 90px; height: 150px;
-  background: var(--color-secondary);
-  transform: skewX(-24deg);
+.hero-ring--orange {
+  left: 5.7%; top: 79%;
+  width: calc(54.2 * var(--u));
+  border: calc(6.3 * var(--u)) solid var(--hero-orange);
 }
-.hero-shape--slash-b {
-  display: none;
-  bottom: 18%; right: 14%;
-  width: 70px; height: 190px;
-  background: var(--color-secondary);
-  transform: skewX(-24deg);
+.hero-ring--green {
+  left: 100.7%; top: 38%;
+  width: calc(70 * var(--u));
+  border: calc(6.1 * var(--u)) solid var(--hero-green);
 }
 
 .hero-card-wrap {
@@ -212,16 +215,10 @@ body > footer.is-loaded {
   border-radius: 1rem;
   padding: 2rem 1.5rem calc(var(--hero-overlap) + 1.4rem);
 }
-@media (min-width: 768px) {
-  .hero-shape--slash-b { display: block; }
-  .hero { --hero-overlap: min(4.5vw, 4.75rem); }
-  .hero-card-wrap { padding: 2.75rem 1.5rem 0; }
-  .hero-card { padding: 3rem 3rem calc(var(--hero-overlap) + 0.9rem); border-radius: 1.25rem; }
-}
 
-/* Typewriter: a hidden "ghost" copy of the full headline holds the final
+/* Typewriter: a hidden "ghost" copy of the longest headline holds the final
    height/wrapping, and the typed text is laid over it — so the card never
-   jumps in size while it types. */
+   jumps in size while it types or swaps words. */
 .hero-title {
   position: relative;
   font-weight: 600;
@@ -230,10 +227,9 @@ body > footer.is-loaded {
   font-size: clamp(2.1rem, 8.4vw, 2.75rem);
 }
 @media (min-width: 640px) { .hero-title { font-size: 3rem; } }
-@media (min-width: 1024px) { .hero-title { font-size: 3.6rem; } }
 .hero-title-ghost { visibility: hidden; display: block; }
 .hero-title-typed { position: absolute; inset: 0; display: block; }
-.hero-title .hl { color: var(--color-secondary); }
+.hero-title .hl { color: var(--hero-green); }
 .hero-cursor {
   display: inline-block;
   width: 0.06em; height: 0.95em;
@@ -247,32 +243,26 @@ body > footer.is-loaded {
 .hero-sub, .hero-cta-row { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
 .hero-sub.is-in, .hero-cta-row.is-in { opacity: 1; transform: none; }
 .hero-sub { margin-top: 1.25rem; max-width: 28rem; font-size: 1.05rem; line-height: 1.4; }
-@media (min-width: 768px) { .hero-sub { font-size: 1.3rem; } }
 .hero-cta-row { margin-top: 1.5rem; display: flex; justify-content: flex-start; }
-@media (min-width: 768px) { .hero-cta-row { margin-top: 2rem; justify-content: flex-end; } }
 
-/* Photo — the real file should be a transparent PNG/WebP cutout */
+/* Photo — transparent cutout; the lower part tucks behind the ticker */
 .hero-photo {
   position: relative; z-index: 20;
   flex: 1 1 auto;
   min-height: 8.5rem;
   margin-top: calc(-1 * var(--hero-overlap));
-  overflow: hidden; /* the lower part of the photo tucks behind the ticker */
+  overflow: hidden;
 }
 .hero-photo img {
   position: absolute; top: 0; left: 50%;
   height: min(128%, 95vw); width: auto; max-width: none;
   transform: translateX(-50%);
 }
-@media (min-width: 768px) {
-  .hero-photo { flex: none; min-height: 0; width: 100%; max-width: 1600px; margin: calc(-1 * var(--hero-overlap)) auto 0; aspect-ratio: 4 / 1; }
-  .hero-photo img { position: static; display: block; height: auto; width: 100%; max-width: none; transform: none; }
-}
 
 /* Ticker */
 .hero-ticker {
   position: relative; z-index: 30;
-  background: var(--color-secondary);
+  background: var(--hero-green);
   color: var(--color-primary);
   overflow: hidden;
   white-space: nowrap;
@@ -284,9 +274,50 @@ body > footer.is-loaded {
   font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em;
   font-size: 1.5rem; line-height: 1.2;
 }
-@media (min-width: 768px) { .hero-ticker-group { font-size: 2.4rem; } .hero-ticker { padding: 0.7rem 0; } }
 .hero-ticker-star { margin: 0 0.9em; font-size: 0.8em; }
 @keyframes hero-ticker { to { transform: translateX(-50%); } }
+
+/* Short phones (e.g. 360x640): tighten the card so photo + ticker still fit on screen */
+@media (max-width: 899px) and (max-height: 700px) {
+  .hero-title { font-size: 1.95rem; }
+  .hero-card { padding-top: 1.5rem; }
+  .hero-sub { margin-top: 0.9rem; font-size: 0.98rem; }
+  .hero-cta-row { margin-top: 1.1rem; }
+  .hero-card-wrap { padding-top: 1rem; }
+  .hero-ticker-group { font-size: 1.25rem; }
+}
+
+/* Desktop / landscape: exactly one screen tall, everything scales with --s */
+@media (min-width: 900px) {
+  .hero {
+    --s: min(1vh, 0.62vw);
+    --u: 1vw;
+    --hero-overlap: calc(5 * var(--s));
+    height: calc(100vh - 5.25rem);
+    min-height: 31rem;
+  }
+  @supports (height: 1svh) {
+    .hero { --s: min(1svh, 0.62vw); height: calc(100svh - 5.25rem); }
+  }
+  .hero-card-wrap { padding: calc(4 * var(--s)) 1.5rem 0; }
+  .hero-card {
+    max-width: calc(97 * var(--s));
+    border-radius: calc(2 * var(--s));
+    padding: calc(5.4 * var(--s)) calc(5.4 * var(--s)) calc(var(--hero-overlap) + 2 * var(--s));
+  }
+  .hero-title { font-size: max(2rem, calc(6.2 * var(--s))); }
+  .hero-sub { margin-top: calc(2 * var(--s)); max-width: calc(47 * var(--s)); font-size: max(1rem, calc(2.3 * var(--s))); }
+  .hero-cta-row { margin-top: calc(3.2 * var(--s)); justify-content: flex-end; }
+
+  .hero-photo { flex: 1 1 0; min-height: 0; }
+  .hero-photo img {
+    left: 0; width: 100%; height: 100%; max-width: none;
+    transform: none;
+    object-fit: cover; object-position: 50% 0;
+  }
+  .hero-ticker { padding: calc(1 * var(--s)) 0; }
+  .hero-ticker-group { font-size: max(1.4rem, calc(4.4 * var(--s))); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cursor { animation: none; }
@@ -295,14 +326,4 @@ body > footer.is-loaded {
   .hero-ticker-track { animation: none; display: block; }
   .hero-ticker-group { flex-wrap: wrap; justify-content: center; }
   .hero-ticker-group + .hero-ticker-group { display: none; }
-}
-
-/* Short phones (e.g. 360x640): tighten the card so photo + ticker still fit on screen */
-@media (max-width: 767px) and (max-height: 700px) {
-  .hero-title { font-size: 1.95rem; }
-  .hero-card { padding-top: 1.5rem; }
-  .hero-sub { margin-top: 0.9rem; font-size: 0.98rem; }
-  .hero-cta-row { margin-top: 1.1rem; }
-  .hero-card-wrap { padding-top: 1rem; }
-  .hero-ticker-group { font-size: 1.25rem; }
 }
