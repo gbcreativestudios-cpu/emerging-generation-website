@@ -75,15 +75,13 @@ collections:
             name: "hero"
             widget: "object"
             fields:
-              - { label: "Badge Text", name: "badge", widget: "string" }
-              - { label: "Show Countdown Timer?", name: "show_countdown", widget: "boolean", default: true }
-              - { label: "Event Date & Time (used by countdown)", name: "event_date", widget: "datetime", required: false }
-              - { label: "Poster Image (replaces the title — any size/shape works)", name: "poster_image", widget: "image" }
-              - { label: "Paragraph (leave blank to hide it)", name: "paragraph", widget: "text", required: false }
+              - { label: "Headline (typed out on load)", name: "headline_start", widget: "string", hint: "The plain white part, e.g. The next generation isn't waiting. It's" }
+              - { label: "Headline Highlighted Ending (green)", name: "headline_highlight", widget: "string", hint: "e.g. emerging." }
+              - { label: "Words That Rotate After The Ending", name: "rotating_words", widget: "list", required: false, hint: "After the green ending types out, the headline erases it and types each of these in turn, then loops back to the first. Include the full stop, e.g. connecting." }
+              - { label: "Subline (leave blank to hide)", name: "subline", widget: "string", required: false }
               - { label: "Button Label", name: "cta_label", widget: "string" }
-              - { label: "Show Lower Photo?", name: "show_photo", widget: "boolean", default: true }
-              - { label: "Hero Image", name: "image", widget: "image" }
-              - { label: "Image Caption", name: "image_caption", widget: "string" }
+              - { label: "Group Photo (transparent PNG works best)", name: "group_image", widget: "image", hint: "Wide cutout of the group. On phones the sides are cropped." }
+              - { label: "Scrolling Ticker Words", name: "ticker_words", widget: "list", hint: "Each word scrolls across the green band, separated by a star." }
           - label: "Who We Are (green section)"
             name: "who_we_are"
             widget: "object"

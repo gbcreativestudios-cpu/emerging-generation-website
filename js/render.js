@@ -190,56 +190,51 @@ async function renderHomePage() {
       <button data-open-modal="${i.action}" class="w-full text-center bg-${colorMap[i.color]} ${i.color === 'yellow' ? 'text-neutral-900' : 'text-white'} hover-bg-${colorMap[i.color]}-dark font-bold py-3 rounded-xl transition-all shadow-sm focus:outline-none">${i.button_label}</button>
     </div>`).join('');
 
-  // Paragraph is optional — leave it blank in the CMS to hide it entirely.
-  const heroParagraphHTML = data.hero.paragraph
-    ? `<p class="text-neutral-500 text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-10">${data.hero.paragraph}</p>`
-    : '';
-
-  // Lower photo + caption is optional — toggle "show_photo" off in the CMS to hide it.
-  // Mobile now gets a shorter aspect ratio (was 3/4, quite tall) so the
-  // hero photo doesn't push the fold down as far on phones. sm/md keep
-  // their previous ratios. The image itself moved into a .parallax-layer
-  // (see css/style.css + initParallax in js/main.js) so it can be nudged
-  // vertically on scroll without disturbing the hover-zoom transform that
-  // still lives on the <img>, or the caption overlay pinned to the frame.
-  const heroPhotoHTML = data.hero.show_photo !== false
-    ? `<div class="parallax-frame w-full max-w-4xl aspect-[4/3] sm:aspect-[16/10] md:aspect-[21/9] rounded-3xl shadow-xl border border-neutral-100 group">
-          <div class="parallax-layer" data-parallax-layer data-parallax-speed="0.14" data-parallax-max="24">
-            <img src="${data.hero.image}" alt="Immigrant and newcomer youth connected together outdoors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
-          </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-4 md:p-8">
-            <p class="text-white font-medium text-xs sm:text-sm md:text-base backdrop-blur-sm bg-white/10 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl leading-snug max-w-[85%] sm:max-w-none">${data.hero.image_caption}</p>
-          </div>
-        </div>`
-    : '';
-
-  // Countdown near the date badge is optional — toggle "show_countdown" off
-  // in the CMS to hide it. Requires "event_date" (ISO string) to be set.
-  const heroCountdownHTML = data.hero.show_countdown && data.hero.event_date
-    ? `<div id="hero-countdown" class="flex items-center gap-3 md:gap-4 mb-8" data-event-date="${data.hero.event_date}">
-         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-days>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Days</span></div>
-         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-hours>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Hrs</span></div>
-         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-minutes>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Min</span></div>
-         <div class="flex flex-col items-center"><span class="text-2xl md:text-3xl font-bold text-primary" data-countdown-seconds>00</span><span class="text-[10px] uppercase tracking-wider text-neutral-400">Sec</span></div>
-       </div>`
-    : '';
+  // ---- Hero (green card + group photo + scrolling ticker) ----
+  // Headline = plain start + highlighted ending, typed out on load by
+  // initHeroTypewriter(). All of it is editable under Home Page → Hero.
+  const hero = data.hero;
+  const headStart = hero.headline_start || '';
+  const headHighlight = hero.headline_highlight || '';
+  // The green ending types first, then the headline keeps cycling through
+  // these words (and loops back to the first). The hidden "ghost" copy uses
+  // the longest word so the card height never changes as words swap.
+  const highlightWords = [headHighlight, ...(hero.rotating_words || [])].filter(Boolean);
+  const longestWord = highlightWords.reduce((a, b) => (b.length > a.length ? b : a), '');
+  const headlineFull = (headStart + ' ' + headHighlight).trim();
+  const tickerWords = (hero.ticker_words && hero.ticker_words.length ? hero.ticker_words : []);
+  const star = '<span class="hero-ticker-star" aria-hidden="true">&#10033;</span>';
+  // Words are repeated inside one group so the group is always wider than
+  // the screen; the group itself is duplicated so the loop never gaps.
+  const tickerGroup = '<div class="hero-ticker-group">' +
+    [...tickerWords, ...tickerWords].map(w => `<span>${w}</span>${star}`).join('') + '</div>';
+  const heroSubHTML = hero.subline ? `<p class="hero-sub">${hero.subline}</p>` : '';
 
   document.getElementById('page-content').innerHTML = `
-    <section class="relative overflow-hidden bg-white pt-24 pb-20">
-      <div class="max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
-        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary-10 text-secondary text-xs font-semibold tracking-wider uppercase mb-8">${ICONS.calendar(12)} ${data.hero.badge}</span>
-        ${heroCountdownHTML}
-        <!-- Poster replaces the old text title/theme. No fixed aspect ratio —
-             displays at whatever size/shape the uploaded image actually is,
-             just capped so it never overwhelms the page. Moves gently on
-             scroll (own speed/range vs. the lower photo below) so the hero
-             reads as a layered scroll parallax rather than one image alone. -->
-        <img src="${data.hero.poster_image}" alt="${data.hero.badge}" class="w-full max-w-4xl h-auto mx-auto mb-6" data-parallax-layer data-parallax-speed="0.08" data-parallax-max="14">
-        ${heroParagraphHTML}
-        <div class="mb-20">
-          <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-black text-lg md:text-xl px-12 py-5 rounded-2xl transition-all shadow-lg hover:scale-[1.02] focus:outline-none flex items-center justify-center min-h-[64px]">${data.hero.cta_label}</button>
+    <section class="hero" id="hero">
+      <span class="hero-shape hero-shape--arc" aria-hidden="true"></span>
+      <span class="hero-shape hero-shape--slash-a" aria-hidden="true"></span>
+      <span class="hero-shape hero-shape--slash-b" aria-hidden="true"></span>
+
+      <div class="hero-card-wrap">
+        <div class="hero-card">
+          <h1 class="hero-title" aria-label="${headlineFull}">
+            <span class="hero-title-ghost" aria-hidden="true">${headStart} <span class="hl">${longestWord}</span></span>
+            <span class="hero-title-typed" aria-hidden="true" data-typewriter data-start="${headStart}" data-words="${highlightWords.join('|')}"></span>
+          </h1>
+          ${heroSubHTML}
+          <div class="hero-cta-row">
+            <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-semibold text-base md:text-lg px-6 py-3 md:px-7 rounded-xl transition-all shadow-md focus:outline-none">${hero.cta_label}</button>
+          </div>
         </div>
-        ${heroPhotoHTML}
+      </div>
+
+      <div class="hero-photo">
+        <img src="${hero.group_image}" alt="A diverse group of newcomer youth laughing together" fetchpriority="high">
+      </div>
+
+      <div class="hero-ticker" aria-label="${tickerWords.join(', ')}">
+        <div class="hero-ticker-track" aria-hidden="true">${tickerGroup}${tickerGroup}</div>
       </div>
     </section>
 
@@ -291,41 +286,66 @@ async function renderHomePage() {
       </div>
     </section>`;
   initFadeIn();
-  initHeroCountdown();
-  initParallax();
   revealPageContent();
+  initHeroTypewriter();
 }
 
-/* Live countdown for the hero date badge. Reads the target date off the
-   #hero-countdown container (set from hero.event_date in the CMS) and
-   ticks every second. If the CMS toggle is off, the container never gets
-   created, so this just quietly does nothing. */
-function initHeroCountdown() {
-  const el = document.getElementById('hero-countdown');
-  if (!el) return;
-  const target = new Date(el.dataset.eventDate).getTime();
-  if (isNaN(target)) return;
+/* Typewriter for the hero headline. Types the plain part plus the first
+   green word, then keeps going: it backspaces the green word and types the
+   next one (Connecting, Leading, Belonging…), looping forever. The subline
+   and button fade in once the first headline has finished typing. With
+   reduced motion on, the first headline just appears and never changes. */
+function initHeroTypewriter() {
+  const el = document.querySelector('[data-typewriter]');
+  const reveal = () => document.querySelectorAll('.hero-sub, .hero-cta-row').forEach(n => n.classList.add('is-in'));
+  if (!el) { reveal(); return; }
 
-  const daysEl = el.querySelector('[data-countdown-days]');
-  const hoursEl = el.querySelector('[data-countdown-hours]');
-  const minutesEl = el.querySelector('[data-countdown-minutes]');
-  const secondsEl = el.querySelector('[data-countdown-seconds]');
+  const start = el.dataset.start || '';
+  const words = (el.dataset.words || '').split('|').filter(Boolean);
+  const paint = (plain, hl) => {
+    el.innerHTML = plain + (hl ? `<span class="hl">${hl}</span>` : '') + '<span class="hero-cursor"></span>';
+  };
 
-  function tick() {
-    const diff = target - Date.now();
-    if (diff <= 0) {
-      [daysEl, hoursEl, minutesEl, secondsEl].forEach(e => e && (e.textContent = '00'));
-      clearInterval(timer);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.innerHTML = start + (words[0] ? ` <span class="hl">${words[0]}</span>` : '');
+    reveal();
+    return;
+  }
+
+  // Timings (ms) — tweak here if it feels too fast or slow.
+  const TYPE = 55;        // per character typed
+  const ERASE = 30;       // per character erased
+  const HOLD = 2200;      // pause on a finished word
+  const GAP = 350;        // pause after erasing, before the next word
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  (async function run() {
+    await sleep(650);
+    // 1) Type the plain start, then the first highlighted word
+    const lead = start + ' ';
+    for (let i = 1; i <= lead.length; i++) { paint(lead.slice(0, i), ''); await sleep(TYPE); }
+    const first = words[0] || '';
+    for (let i = 1; i <= first.length; i++) {
+      paint(lead, first.slice(0, i));
+      await sleep(TYPE);
+    }
+    reveal();
+    if (words.length < 2) {
+      setTimeout(() => { const c = el.querySelector('.hero-cursor'); if (c) c.remove(); }, 1600);
       return;
     }
-    const pad = n => String(n).padStart(2, '0');
-    daysEl.textContent = pad(Math.floor(diff / 86400000));
-    hoursEl.textContent = pad(Math.floor((diff % 86400000) / 3600000));
-    minutesEl.textContent = pad(Math.floor((diff % 3600000) / 60000));
-    secondsEl.textContent = pad(Math.floor((diff % 60000) / 1000));
-  }
-  tick();
-  const timer = setInterval(tick, 1000);
+    // 2) Keep cycling the green word
+    let idx = 0;
+    while (true) {
+      await sleep(HOLD);
+      const current = words[idx];
+      for (let i = current.length - 1; i >= 0; i--) { paint(lead, current.slice(0, i)); await sleep(ERASE); }
+      await sleep(GAP);
+      idx = (idx + 1) % words.length;
+      const next = words[idx];
+      for (let i = 1; i <= next.length; i++) { paint(lead, next.slice(0, i)); await sleep(TYPE); }
+    }
+  })();
 }
 
 /* ---------- About page ---------- */

@@ -1,14 +1,25 @@
 {
   "hero": {
-    "badge": "Upcoming Event • September 5th",
-    "show_countdown": true,
-    "event_date": "2026-09-05T09:00:00",
-    "poster_image": "/images/banner.png",
-    "paragraph": "A premier leadership and wellness summit uniquely tailored for Canadian newcomer youth. Gain keys to growth, navigate your landscape, and find your family.",
-    "cta_label": "SIGN UP NOW!",
-    "show_photo": true,
-    "image": "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
-    "image_caption": "A generation connected. Rooted in community, rising together."
+    "headline_start": "The next generation isn’t waiting. It’s",
+    "headline_highlight": "emerging.",
+    "subline": "Leadership, connection and belonging for newcomer youth across Canada.",
+    "cta_label": "Join Community",
+    "group_image": "/images/hero-group.webp",
+    "ticker_words": [
+      "Learn",
+      "Connect",
+      "Lead",
+      "Belong",
+      "Grow",
+      "Thrive"
+    ],
+    "rotating_words": [
+      "connecting.",
+      "leading.",
+      "belonging.",
+      "growing.",
+      "thriving."
+    ]
   },
   "who_we_are": {
     "eyebrow": "Who We Are",
