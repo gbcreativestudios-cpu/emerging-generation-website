@@ -17,6 +17,11 @@ speaker profiles without touching code.
   title, photo, bio, experience, speaking topics). New speakers show
   up automatically on the Speakers page and (the newest 3) on Home.
 
+- **Gallery** — add photos (select many at once) and videos
+  (YouTube/Vimeo links, or short uploaded clips). Photos open in a
+  full-screen viewer you can scroll through; videos get their own
+  section lower on the same page.
+
 Changing colors in Site Settings updates the whole site, since every
 page reads its brand colors from `content/settings.json` at load time.
 

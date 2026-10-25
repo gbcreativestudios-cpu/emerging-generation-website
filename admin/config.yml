@@ -231,6 +231,29 @@ collections:
               - { label: "Heading", name: "heading", widget: "string" }
 
   # ------------------------------------------------------------
+  # Gallery page — photos (an image dump: no titles/captions) and videos
+  # ------------------------------------------------------------
+  - name: "gallery"
+    label: "Gallery"
+    files:
+      - name: "gallery"
+        label: "Gallery Page"
+        file: "content/gallery.json"
+        fields:
+          - { label: "Photos", name: "photos", widget: "image", allow_multiple: true, required: false, hint: "Click 'Choose images' and select as many as you like at once, or upload new ones. Use 'Add more images' later to keep adding. Visitors click a photo to open it and scroll through the rest." }
+          - { label: "Show newest photos first?", name: "newest_first", widget: "boolean", default: true, hint: "On = the last photo you add appears at the top. Off = the order you added them." }
+          - { label: "Photos Section Label (leave blank for none)", name: "photos_label", widget: "string", required: false }
+          - { label: "Videos Section Label", name: "videos_label", widget: "string", required: false, default: "Videos" }
+          - label: "Videos"
+            name: "videos"
+            widget: "list"
+            required: false
+            hint: "Easiest: paste a YouTube or Vimeo link (keeps the site fast). Uploading a video file works for short clips only."
+            fields:
+              - { label: "YouTube or Vimeo link", name: "video_url", widget: "string", required: false }
+              - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
+
+  # ------------------------------------------------------------
   # Speakers — one file per speaker. Click "New Speaker" to add
   # one, or open an existing speaker and use "Duplicate" to copy
   # one as a starting point for a new profile.

@@ -611,3 +611,161 @@ async function renderSpeakerDetailPage() {
   document.title = speaker.name + ' — The Emerging Generation';
   revealPageContent();
 }
+
+
+/* ---------- Gallery page ---------- */
+/* An image dump: no titles or captions. Click any photo to open it full
+   screen, then move through the rest with the arrows, the keyboard
+   (← → Esc) or by swiping. Videos sit in their own section lower down.
+   Photos and videos come from content/gallery.json (Decap → Gallery). */
+
+// Local images go through Netlify's image resizer so phone-sized originals
+// don't make the page heavy. If that isn't available (e.g. a local preview)
+// the <img> quietly falls back to the original file.
+function galleryImg(path, width) {
+  if (!path || /^https?:/i.test(path)) return path;
+  return '/.netlify/images?url=' + encodeURIComponent(path) + '&w=' + width;
+}
+
+function parseGalleryVideo(v) {
+  if (!v) return null;
+  const url = (v.video_url || '').trim();
+  if (url) {
+    const yt = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/);
+    if (yt) return { kind: 'youtube', id: yt[1] };
+    const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (vm) return { kind: 'vimeo', id: vm[1] };
+  }
+  if (v.video_file) return { kind: 'file', src: v.video_file };
+  return null;
+}
+
+function galleryVideoHTML(v) {
+  if (v.kind === 'file') {
+    return `<div class="video-card" data-animate><video controls preload="metadata" playsinline src="${encodeURI(v.src)}"></video></div>`;
+  }
+  const embed = v.kind === 'youtube'
+    ? `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`
+    : `https://player.vimeo.com/video/${v.id}?autoplay=1`;
+  const thumb = v.kind === 'youtube'
+    ? `<img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy" decoding="async">`
+    : '';
+  return `<div class="video-card" data-animate>
+      <button type="button" class="video-poster" data-embed="${embed}" aria-label="Play video">
+        ${thumb}<span class="video-play">${ICONS.play(28)}</span>
+      </button>
+    </div>`;
+}
+
+async function renderGalleryPage() {
+  let data = {};
+  try { data = await loadJSON('/content/gallery.json'); } catch (e) { /* empty gallery */ }
+
+  let photos = [].concat(data.photos || []).filter(Boolean);
+  if (data.newest_first !== false) photos = photos.slice().reverse();
+  const videos = (data.videos || []).map(parseGalleryVideo).filter(Boolean);
+
+  const label = (text) => text ? `<p class="text-xs font-bold text-secondary uppercase tracking-widest mb-5">${text}</p>` : '';
+
+  const photosHTML = photos.length ? `
+    <section>
+      ${label(data.photos_label)}
+      <div class="gallery-grid">
+        ${photos.map((src, i) => `
+          <button type="button" class="gallery-item" data-index="${i}" data-animate aria-label="Open photo ${i + 1} of ${photos.length}">
+            <img src="${galleryImg(src, 700)}" data-orig="${encodeURI(src)}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=this.dataset.orig">
+          </button>`).join('')}
+      </div>
+    </section>` : '';
+
+  const videosHTML = videos.length ? `
+    <section class="${photos.length ? 'mt-16 md:mt-24' : ''}">
+      ${label(data.videos_label)}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">${videos.map(galleryVideoHTML).join('')}</div>
+    </section>` : '';
+
+  const emptyHTML = (!photos.length && !videos.length)
+    ? '<p class="text-center text-neutral-400 py-24">Photos and videos from our events will appear here.</p>' : '';
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="bg-white py-10 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">${photosHTML}${videosHTML}${emptyHTML}</div>
+    </div>`;
+
+  initGalleryLightbox(photos);
+  document.querySelectorAll('.video-poster').forEach(btn => btn.addEventListener('click', () => {
+    const frame = document.createElement('iframe');
+    frame.src = btn.dataset.embed;
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    frame.title = 'Event video';
+    btn.replaceWith(frame);
+  }));
+  initFadeIn();
+  revealPageContent();
+}
+
+function initGalleryLightbox(photos) {
+  if (!photos.length) return;
+  const box = document.createElement('div');
+  box.className = 'lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', 'Photo viewer');
+  box.hidden = true;
+  box.innerHTML = `
+    <button type="button" class="lb-btn lb-close" aria-label="Close">${ICONS.close(26)}</button>
+    <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">${ICONS.arrowLeft(26)}</button>
+    <img class="lb-img" alt="">
+    <button type="button" class="lb-btn lb-next" aria-label="Next photo">${ICONS.arrowRight(26)}</button>`;
+  document.body.appendChild(box);
+
+  const img = box.querySelector('.lb-img');
+  let index = 0, opener = null;
+
+  const preload = (i) => { const n = new Image(); n.src = galleryImg(photos[(i + photos.length) % photos.length], 1800); };
+  function show(i) {
+    index = (i + photos.length) % photos.length;
+    img.classList.remove('is-in');
+    img.onerror = () => { img.onerror = null; img.src = encodeURI(photos[index]); };
+    img.onload = () => img.classList.add('is-in');
+    img.src = galleryImg(photos[index], 1800);
+    preload(index + 1); preload(index - 1);
+  }
+  function open(i, trigger) {
+    opener = trigger || null;
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    show(i);
+    box.querySelector('.lb-close').focus();
+  }
+  function close() {
+    box.hidden = true;
+    document.body.style.overflow = '';
+    img.removeAttribute('src');
+    if (opener) opener.focus();
+  }
+
+  document.querySelectorAll('.gallery-item').forEach(el =>
+    el.addEventListener('click', () => open(Number(el.dataset.index), el)));
+  box.querySelector('.lb-close').addEventListener('click', close);
+  box.querySelector('.lb-prev').addEventListener('click', (e) => { e.stopPropagation(); show(index - 1); });
+  box.querySelector('.lb-next').addEventListener('click', (e) => { e.stopPropagation(); show(index + 1); });
+  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  window.addEventListener('keydown', (e) => {
+    if (box.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(index - 1);
+    else if (e.key === 'ArrowRight') show(index + 1);
+  });
+
+  // Swipe left / right on touch screens
+  let startX = null;
+  box.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener('touchend', (e) => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    startX = null;
+    if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+}
