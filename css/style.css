@@ -172,7 +172,6 @@ body > footer.is-loaded {
 .hero {
   --hero-green: #3BB87B;
   --hero-orange: #F2A04A;
-  --u: 2.3vw;                       /* ring size unit: bigger on phones */
   --hero-overlap: 1.75rem;
   position: relative;
   overflow: hidden;
@@ -188,18 +187,15 @@ body > footer.is-loaded {
 .hero-ring {
   position: absolute; z-index: 0; pointer-events: none;
   box-sizing: border-box; aspect-ratio: 1; border-radius: 9999px;
-  transform: translate(-50%, -50%);
+  width: var(--rw);
+  left: calc(var(--cx) - var(--rw) / 2);
+  top: calc(var(--cy) - var(--rw) / 2);
+  border: var(--bw) solid var(--ring-color);
 }
-.hero-ring--orange {
-  left: 5.7%; top: 79%;
-  width: calc(54.2 * var(--u));
-  border: calc(6.3 * var(--u)) solid var(--hero-orange);
-}
-.hero-ring--green {
-  left: 100.7%; top: 38%;
-  width: calc(70 * var(--u));
-  border: calc(6.1 * var(--u)) solid var(--hero-green);
-}
+/* Phones: orange hugs the left edge low down, green hugs the right edge
+   high up — sized so the two rings never touch. */
+.hero-ring--orange { --cx: -2%;  --cy: 78%; --rw: 110vw; --bw: 11vw;   --ring-color: var(--hero-orange); }
+.hero-ring--green  { --cx: 102%; --cy: 30%; --rw: 124vw; --bw: 10.5vw; --ring-color: var(--hero-green); }
 
 .hero-card-wrap {
   position: relative; z-index: 10;
@@ -240,8 +236,16 @@ body > footer.is-loaded {
 }
 @keyframes hero-blink { 50% { opacity: 0; } }
 
-.hero-sub, .hero-cta-row { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
-.hero-sub.is-in, .hero-cta-row.is-in { opacity: 1; transform: none; }
+/* Intro choreography: the card, subline, button, photo and ticker all fade
+   up in a quick stagger (each sets its own --d delay and --rise distance),
+   so the green card never shows up empty. initHeroIntro() adds .is-ready. */
+.hero .hero-reveal { opacity: 0; transform: translateY(var(--rise, 14px)); }
+.hero .hero-fade { opacity: 0; }
+.hero.is-ready .hero-reveal {
+  opacity: 1; transform: none;
+  transition: opacity .6s ease var(--d, 0s), transform .75s cubic-bezier(.2, .7, .2, 1) var(--d, 0s);
+}
+.hero.is-ready .hero-fade { opacity: 1; transition: opacity .8s ease; }
 .hero-sub { margin-top: 1.25rem; max-width: 28rem; font-size: 1.05rem; line-height: 1.4; }
 .hero-cta-row { margin-top: 1.5rem; display: flex; justify-content: flex-start; }
 
@@ -291,7 +295,6 @@ body > footer.is-loaded {
 @media (min-width: 900px) {
   .hero {
     --s: min(1vh, 0.62vw);
-    --u: 1vw;
     --hero-overlap: calc(5 * var(--s));
     height: calc(100vh - 5.25rem);
     min-height: 31rem;
@@ -299,6 +302,8 @@ body > footer.is-loaded {
   @supports (height: 1svh) {
     .hero { --s: min(1svh, 0.62vw); height: calc(100svh - 5.25rem); }
   }
+  .hero-ring--orange { --cx: 5.7%;   --cy: 79%; --rw: 54.2vw; --bw: 6.3vw; }
+  .hero-ring--green  { --cx: 100.7%; --cy: 38%; --rw: 70vw;   --bw: 6.1vw; }
   .hero-card-wrap { padding: calc(4 * var(--s)) 1.5rem 0; }
   .hero-card {
     max-width: calc(97 * var(--s));
@@ -321,7 +326,7 @@ body > footer.is-loaded {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cursor { animation: none; }
-  .hero-sub, .hero-cta-row { opacity: 1; transform: none; transition: none; }
+  .hero .hero-reveal, .hero .hero-fade { opacity: 1; transform: none; transition: none; }
   .hero-ticker { white-space: normal; text-align: center; }
   .hero-ticker-track { animation: none; display: block; }
   .hero-ticker-group { flex-wrap: wrap; justify-content: center; }

@@ -208,31 +208,31 @@ async function renderHomePage() {
   // the screen; the group itself is duplicated so the loop never gaps.
   const tickerGroup = '<div class="hero-ticker-group">' +
     [...tickerWords, ...tickerWords].map(w => `<span>${w}</span>${star}`).join('') + '</div>';
-  const heroSubHTML = hero.subline ? `<p class="hero-sub">${hero.subline}</p>` : '';
+  const heroSubHTML = hero.subline ? `<p class="hero-sub hero-reveal" style="--d:.16s;--rise:12px">${hero.subline}</p>` : '';
 
   document.getElementById('page-content').innerHTML = `
     <section class="hero" id="hero">
-      <span class="hero-ring hero-ring--orange" aria-hidden="true"></span>
-      <span class="hero-ring hero-ring--green" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--orange hero-fade" data-depth="0.3" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--green hero-fade" data-depth="0.3" aria-hidden="true"></span>
 
       <div class="hero-card-wrap">
-        <div class="hero-card">
+        <div class="hero-card hero-reveal" data-depth="0.16" style="--d:0s;--rise:16px">
           <h1 class="hero-title" aria-label="${headlineFull}">
             <span class="hero-title-ghost" aria-hidden="true">${headStart} <span class="hl">${longestWord}</span></span>
             <span class="hero-title-typed" aria-hidden="true" data-typewriter data-start="${headStart}" data-words="${highlightWords.join('|')}"></span>
           </h1>
           ${heroSubHTML}
-          <div class="hero-cta-row">
+          <div class="hero-cta-row hero-reveal" style="--d:.3s;--rise:12px">
             <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-semibold text-base h-12 px-6 inline-flex items-center justify-center rounded-xl transition-all shadow-md focus:outline-none">${hero.cta_label}</button>
           </div>
         </div>
       </div>
 
-      <div class="hero-photo">
+      <div class="hero-photo hero-reveal" data-depth="0.08" style="--d:.1s;--rise:34px">
         <img src="${hero.group_image}" alt="A diverse group of newcomer youth laughing together" fetchpriority="high">
       </div>
 
-      <div class="hero-ticker" aria-label="${tickerWords.join(', ')}">
+      <div class="hero-ticker hero-reveal" style="--d:.32s;--rise:30px" aria-label="${tickerWords.join(', ')}">
         <div class="hero-ticker-track" aria-hidden="true">${tickerGroup}${tickerGroup}</div>
       </div>
     </section>
@@ -285,29 +285,42 @@ async function renderHomePage() {
       </div>
     </section>`;
   initFadeIn();
+  // Wait (briefly) for the group photo so the hero never appears with a
+  // missing picture, then reveal everything together in a quick stagger.
+  const heroImg = document.querySelector('.hero-photo img');
+  await Promise.race([
+    heroImg && heroImg.decode ? heroImg.decode().catch(() => {}) : Promise.resolve(),
+    new Promise(r => setTimeout(r, 1800))
+  ]);
   revealPageContent();
-  initHeroTypewriter();
+  initHeroIntro();
+  initHeroParallax();
 }
 
-/* Typewriter for the hero headline. Types the plain part plus the first
-   green word, then keeps going: it backspaces the green word and types the
-   next one (Connecting, Leading, Belonging…), looping forever. The subline
-   and button fade in once the first headline has finished typing. With
-   reduced motion on, the first headline just appears and never changes. */
-function initHeroTypewriter() {
+/* Hero intro. The card, headline, subline, button, photo and ticker all
+   appear together in a quick stagger (see .hero-reveal in style.css) — the
+   card never shows up empty. The headline starts typing the instant it
+   appears, then the green word keeps cycling (emerging → connecting → …).
+   With reduced motion on, everything is simply there and the word stays put. */
+function initHeroIntro() {
+  const hero = document.getElementById('hero');
   const el = document.querySelector('[data-typewriter]');
-  const reveal = () => document.querySelectorAll('.hero-sub, .hero-cta-row').forEach(n => n.classList.add('is-in'));
-  if (!el) { reveal(); return; }
-
-  const start = el.dataset.start || '';
-  const words = (el.dataset.words || '').split('|').filter(Boolean);
+  const start = el ? (el.dataset.start || '') : '';
+  const words = el ? (el.dataset.words || '').split('|').filter(Boolean) : [];
   const paint = (plain, hl) => {
     el.innerHTML = plain + (hl ? `<span class="hl">${hl}</span>` : '') + '<span class="hero-cursor"></span>';
   };
+  // Prefill the headline BEFORE revealing the card (see run() below), so the
+  // very first frame already has text in it.
+  if (el && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const t = (start + ' ' + (words[0] || '')).split(' ');
+    paint(t.slice(0, Math.max(0, t.length - 3)).join(' ') + ' ', '');
+  }
+  if (hero) hero.classList.add('is-ready');
+  if (!el) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     el.innerHTML = start + (words[0] ? ` <span class="hl">${words[0]}</span>` : '');
-    reveal();
     return;
   }
 
@@ -319,16 +332,17 @@ function initHeroTypewriter() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   (async function run() {
-    await sleep(650);
-    // 1) Type the plain start, then the first highlighted word
+    // The card opens already "nearly done typing": everything except the last
+    // three words (waiting. It's emerging.) is on screen from the first frame,
+    // and typing carries on from there — so it never shows up empty.
     const lead = start + ' ';
-    for (let i = 1; i <= lead.length; i++) { paint(lead.slice(0, i), ''); await sleep(TYPE); }
     const first = words[0] || '';
-    for (let i = 1; i <= first.length; i++) {
-      paint(lead, first.slice(0, i));
-      await sleep(TYPE);
-    }
-    reveal();
+    const tokens = (lead + first).split(' ');
+    const prefill = tokens.slice(0, Math.max(0, tokens.length - 3)).join(' ') + ' ';
+    const prefillLen = Math.min(prefill.length, lead.length);
+    paint(lead.slice(0, prefillLen), '');
+    for (let i = prefillLen + 1; i <= lead.length; i++) { paint(lead.slice(0, i), ''); await sleep(TYPE); }
+    for (let i = 1; i <= first.length; i++) { paint(lead, first.slice(0, i)); await sleep(TYPE); }
     if (words.length < 2) {
       setTimeout(() => { const c = el.querySelector('.hero-cursor'); if (c) c.remove(); }, 1600);
       return;
@@ -345,6 +359,29 @@ function initHeroTypewriter() {
       for (let i = 1; i <= next.length; i++) { paint(lead, next.slice(0, i)); await sleep(TYPE); }
     }
   })();
+}
+
+/* Hero parallax. Each layer lags the page scroll by a different amount
+   (data-depth = fraction of the scroll it trails by): the rings trail most,
+   then the card, then the photo, and the ticker moves with the page. So as
+   you scroll, the photo rises over the card a little and the ticker slides
+   up over the hero, as if covering it. Uses the standalone `translate`
+   property so it never fights the intro animation's `transform`. */
+function initHeroParallax() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layers = [...hero.querySelectorAll('[data-depth]')].map(el => ({ el, f: parseFloat(el.dataset.depth) || 0 }));
+  let ticking = false;
+  function update() {
+    const limit = hero.offsetHeight * 0.6;
+    const y = Math.min(Math.max(window.scrollY, 0), limit);
+    layers.forEach(l => { l.el.style.translate = `0 ${(y * l.f).toFixed(1)}px`; });
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }
 
 /* ---------- About page ---------- */
