@@ -236,16 +236,15 @@ body > footer.is-loaded {
 }
 @keyframes hero-blink { 50% { opacity: 0; } }
 
-/* Intro choreography: the card, subline, button, photo and ticker all fade
-   up in a quick stagger (each sets its own --d delay and --rise distance),
-   so the green card never shows up empty. initHeroIntro() adds .is-ready. */
+/* Intro choreography: only the card's contents stagger in — the card, then
+   the subline, then the button (each sets its own --d delay and --rise
+   distance). The rings, photo and ticker are simply there from the start,
+   so the card never shows up empty. initHeroIntro() adds .is-ready. */
 .hero .hero-reveal { opacity: 0; transform: translateY(var(--rise, 14px)); }
-.hero .hero-fade { opacity: 0; }
 .hero.is-ready .hero-reveal {
   opacity: 1; transform: none;
   transition: opacity .6s ease var(--d, 0s), transform .75s cubic-bezier(.2, .7, .2, 1) var(--d, 0s);
 }
-.hero.is-ready .hero-fade { opacity: 1; transition: opacity .8s ease; }
 .hero-sub { margin-top: 1.25rem; max-width: 28rem; font-size: 1.05rem; line-height: 1.4; }
 .hero-cta-row { margin-top: 1.5rem; display: flex; justify-content: flex-start; }
 
@@ -326,7 +325,7 @@ body > footer.is-loaded {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cursor { animation: none; }
-  .hero .hero-reveal, .hero .hero-fade { opacity: 1; transform: none; transition: none; }
+  .hero .hero-reveal { opacity: 1; transform: none; transition: none; }
   .hero-ticker { white-space: normal; text-align: center; }
   .hero-ticker-track { animation: none; display: block; }
   .hero-ticker-group { flex-wrap: wrap; justify-content: center; }

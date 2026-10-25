@@ -171,9 +171,11 @@ function initFadeIn() {
 // never the nav bar sitting there alone while the hero is still
 // loading. Double rAF makes sure the browser paints the opacity:0
 // starting state first, otherwise the transition can get skipped.
-function revealPageContent() {
+function revealPageContent(opts) {
   const main = document.getElementById('page-content');
   if (!main) return;
+  // { instant: true } skips the fade/rise so the page is simply there.
+  if (opts && opts.instant) main.style.transition = 'none';
   requestAnimationFrame(() => requestAnimationFrame(() => {
     main.classList.add('is-loaded');
     setTimeout(revealChrome, 180);

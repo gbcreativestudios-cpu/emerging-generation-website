@@ -212,8 +212,8 @@ async function renderHomePage() {
 
   document.getElementById('page-content').innerHTML = `
     <section class="hero" id="hero">
-      <span class="hero-ring hero-ring--orange hero-fade" data-depth="0.3" aria-hidden="true"></span>
-      <span class="hero-ring hero-ring--green hero-fade" data-depth="0.3" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--orange" data-depth="0.3" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--green" data-depth="0.3" aria-hidden="true"></span>
 
       <div class="hero-card-wrap">
         <div class="hero-card hero-reveal" data-depth="0.16" style="--d:0s;--rise:16px">
@@ -228,11 +228,11 @@ async function renderHomePage() {
         </div>
       </div>
 
-      <div class="hero-photo hero-reveal" data-depth="0.08" style="--d:.1s;--rise:34px">
+      <div class="hero-photo" data-depth="0.08">
         <img src="${hero.group_image}" alt="A diverse group of newcomer youth laughing together" fetchpriority="high">
       </div>
 
-      <div class="hero-ticker hero-reveal" style="--d:.32s;--rise:30px" aria-label="${tickerWords.join(', ')}">
+      <div class="hero-ticker" aria-label="${tickerWords.join(', ')}">
         <div class="hero-ticker-track" aria-hidden="true">${tickerGroup}${tickerGroup}</div>
       </div>
     </section>
@@ -292,7 +292,9 @@ async function renderHomePage() {
     heroImg && heroImg.decode ? heroImg.decode().catch(() => {}) : Promise.resolve(),
     new Promise(r => setTimeout(r, 1800))
   ]);
-  revealPageContent();
+  // Home page: show the page instantly (no fade) so the rings, photo and
+  // ticker are simply there; only the card's contents stagger in.
+  revealPageContent({ instant: true });
   initHeroIntro();
   initHeroParallax();
 }
