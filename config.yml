@@ -102,7 +102,8 @@ collections:
             name: "who_we_are"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Link Label", name: "link_label", widget: "string" }
@@ -117,14 +118,16 @@ collections:
             name: "speakers_preview"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Link Label", name: "link_label", widget: "string" }
           - label: "Why Newcomers Excel (Benefits)"
             name: "benefits"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Benefit Cards"
                 name: "items"
@@ -137,7 +140,8 @@ collections:
             name: "get_involved"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Cards"
                 name: "items"
@@ -164,7 +168,8 @@ collections:
             name: "hero"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Who We Are"
@@ -178,7 +183,8 @@ collections:
             name: "vision"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -186,7 +192,8 @@ collections:
             name: "mission"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -194,7 +201,8 @@ collections:
             name: "values"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Value Cards (exactly 6 recommended)"
                 name: "items"
@@ -207,14 +215,16 @@ collections:
             name: "promise"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Who We Serve"
             name: "who_we_serve"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -222,14 +232,16 @@ collections:
             name: "why_us"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Founder Story"
             name: "founder"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Photo", name: "image", widget: "image" }
@@ -243,7 +255,8 @@ collections:
             name: "get_involved"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
 
   # ------------------------------------------------------------
@@ -290,6 +303,19 @@ collections:
                   - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
                   - { label: "Thumbnail (optional — overrides the automatic one)", name: "thumbnail", widget: "image", required: false }
                   - { label: "Thumbnail Shape", name: "shape", widget: "select", default: "auto", required: false, options: [{ label: "Automatic", value: "auto" }, { label: "Wide (16:9)", value: "landscape" }, { label: "Square", value: "square" }, { label: "Tall (9:16, for reels/TikToks)", value: "vertical" }] }
+
+  # ------------------------------------------------------------
+  # Speakers page text
+  # ------------------------------------------------------------
+  - name: "speakers_page"
+    label: "Speakers Page Text"
+    files:
+      - name: "speakers_page"
+        label: "Speakers Page Text"
+        file: "content/speakers-page.json"
+        fields:
+          - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+          - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
 
   # ------------------------------------------------------------
   # Speakers — one file per speaker. Click "New Speaker" to add

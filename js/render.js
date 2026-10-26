@@ -113,6 +113,13 @@ async function renderSettings() {
   return settings;
 }
 
+/* Small heading above a section title. Shown only when its toggle is ON in
+   the CMS (eyebrow_show); the text itself is editable there too. */
+function eyebrowHTML(section, color) {
+  if (!section || section.eyebrow_show !== true || !section.eyebrow) return '';
+  return `<span class="text-xs font-bold text-${color} uppercase tracking-widest block mb-3">${section.eyebrow}</span>`;
+}
+
 /* ---------- Speakers ---------- */
 
 // Fallback only — used if manifest.json is ever missing (e.g. very first
@@ -258,7 +265,7 @@ async function renderHomePage() {
       <div class="max-w-7xl mx-auto px-6">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.speakers_preview.eyebrow}</span>
+            ${eyebrowHTML(data.speakers_preview, 'secondary')}
             <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.speakers_preview.heading}</h2>
           </div>
           <a href="/speakers.html" class="inline-flex items-center gap-2 text-accent font-bold hover-text-accent transition-colors focus:outline-none group">${data.speakers_preview.link_label} <span class="group-hover:translate-x-1 transition-transform">${ICONS.arrowRight(18)}</span></a>
@@ -287,7 +294,7 @@ async function renderHomePage() {
 
     <section class="bg-primary text-white py-24 border-t border-white/5">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <span class="text-xs font-bold text-accent uppercase tracking-widest block mb-3">${data.who_we_are.eyebrow}</span>
+        ${eyebrowHTML(data.who_we_are, 'accent')}
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">${data.who_we_are.heading}</h2>
         <p class="text-white/80 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">${data.who_we_are.paragraph}</p>
         <a href="/about.html" class="inline-flex items-center gap-2 text-white font-bold hover-text-accent transition-colors focus:outline-none group">${data.who_we_are.link_label} <span class="group-hover:translate-x-1 transition-transform">${ICONS.arrowRight(18)}</span></a>
@@ -305,7 +312,7 @@ async function renderHomePage() {
     <section class="bg-primary text-white py-24 border-t border-white/5">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-xs font-bold text-accent uppercase tracking-widest block mb-3">${data.benefits.eyebrow}</span>
+          ${eyebrowHTML(data.benefits, 'accent')}
           <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">${data.benefits.heading}</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">${benefitsHTML}</div>
@@ -315,7 +322,7 @@ async function renderHomePage() {
     <section class="bg-white py-24 border-t border-neutral-100">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.get_involved.eyebrow}</span>
+          ${eyebrowHTML(data.get_involved, 'secondary')}
           <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.get_involved.heading}</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">${involvedHTML}</div>
@@ -475,7 +482,7 @@ async function renderAboutPage() {
   document.getElementById('page-content').innerHTML = `
     <section class="bg-neutral-50 py-24 border-b border-neutral-100">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.hero.eyebrow}</span>
+        ${eyebrowHTML(data.hero, 'secondary')}
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-primary tracking-tight mb-6">${data.hero.heading}</h1>
         <p class="text-neutral-500 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">${data.hero.paragraph}</p>
       </div>
@@ -492,7 +499,7 @@ async function renderAboutPage() {
     <section class="bg-neutral-50 py-24 border-y border-neutral-100">
       <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div>
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.vision.eyebrow}</span>
+          ${eyebrowHTML(data.vision, 'secondary')}
           <h2 class="text-3xl font-bold text-primary tracking-tight mb-6">${data.vision.heading}</h2>
           <p class="text-neutral-600 leading-relaxed mb-4">${data.vision.paragraph}</p>
         </div>
@@ -504,7 +511,7 @@ async function renderAboutPage() {
       <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div class="rounded-3xl overflow-hidden shadow-md order-last md:order-first"><img src="${data.mission.image}" alt="Mission representing action and support" class="w-full h-full object-cover"></div>
         <div>
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.mission.eyebrow}</span>
+          ${eyebrowHTML(data.mission, 'secondary')}
           <h2 class="text-3xl font-bold text-primary tracking-tight mb-6">${data.mission.heading}</h2>
           <p class="text-neutral-600 leading-relaxed mb-4">${data.mission.paragraph}</p>
         </div>
@@ -514,7 +521,7 @@ async function renderAboutPage() {
     <section class="bg-neutral-50 py-24 border-y border-neutral-100">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.values.eyebrow}</span>
+          ${eyebrowHTML(data.values, 'secondary')}
           <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.values.heading}</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">${valuesHTML}</div>
@@ -523,7 +530,7 @@ async function renderAboutPage() {
 
     <section class="bg-white py-24">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.promise.eyebrow}</span>
+        ${eyebrowHTML(data.promise, 'secondary')}
         <h2 class="text-3xl font-bold text-primary mb-6">${data.promise.heading}</h2>
         <p class="text-neutral-600 text-lg leading-relaxed max-w-2xl mx-auto">${data.promise.paragraph}</p>
       </div>
@@ -532,7 +539,7 @@ async function renderAboutPage() {
     <section class="bg-neutral-50 py-24 border-y border-neutral-100">
       <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div>
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.who_we_serve.eyebrow}</span>
+          ${eyebrowHTML(data.who_we_serve, 'secondary')}
           <h2 class="text-3xl font-bold text-primary mb-6">${data.who_we_serve.heading}</h2>
           <p class="text-neutral-600 leading-relaxed">${data.who_we_serve.paragraph}</p>
         </div>
@@ -542,7 +549,7 @@ async function renderAboutPage() {
 
     <section class="bg-white py-24">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.why_us.eyebrow}</span>
+        ${eyebrowHTML(data.why_us, 'secondary')}
         <h2 class="text-3xl font-bold text-primary mb-6">${data.why_us.heading}</h2>
         <p class="text-neutral-600 text-lg leading-relaxed max-w-2xl mx-auto">${data.why_us.paragraph}</p>
       </div>
@@ -557,7 +564,7 @@ async function renderAboutPage() {
             </div>
           </div>
           <div class="md:col-span-8">
-            <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.founder.eyebrow}</span>
+            ${eyebrowHTML(data.founder, 'secondary')}
             <h2 class="text-3xl font-bold text-primary mb-1">${data.founder.name}</h2>
             <p class="text-sm font-semibold text-secondary mb-6">${data.founder.title}</p>
             <div class="text-neutral-700 space-y-4 leading-relaxed text-sm md:text-base">
@@ -573,7 +580,7 @@ async function renderAboutPage() {
     <section class="bg-white py-24 border-t border-neutral-100">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.get_involved.eyebrow}</span>
+          ${eyebrowHTML(data.get_involved, 'secondary')}
           <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.get_involved.heading}</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">${involvedHTML}</div>
@@ -588,11 +595,12 @@ async function renderAboutPage() {
 async function renderSpeakersPage() {
   if (!(await loadEventMode()).on) { window.location.replace('/'); return; }
   const speakers = await loadAllSpeakers();
+  const speakersPage = await loadJSON('/content/speakers-page.json').catch(() => ({}));
   document.getElementById('page-content').innerHTML = `
     <div class="bg-white py-24">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">Our Roster</span>
+          ${eyebrowHTML(speakersPage, 'secondary')}
           <h1 class="text-4xl md:text-5xl font-bold text-primary tracking-tight">Our Speakers & Faculty</h1>
           <p class="text-neutral-500 text-sm md:text-base mt-4 max-w-xl mx-auto">A diverse collective of established mentors, leaders, educators, and mental wellness practitioners dedicated to serving Canadian newcomer youth.</p>
         </div>

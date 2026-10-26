@@ -23,6 +23,7 @@
   },
   "who_we_are": {
     "eyebrow": "Who We Are",
+    "eyebrow_show": false,
     "heading": "Empowering the Future Builders of Canada",
     "paragraph": "We are dedicated to fostering safe spaces of belonging, support, and hope for immigrant and newcomer youth (ages 15–25). We walk alongside them during their transition, preparing them with critical skills to lead and thrive.",
     "link_label": "Learn More About Our Journey"
@@ -46,11 +47,13 @@
   ],
   "speakers_preview": {
     "eyebrow": "Mentors & Leaders",
+    "eyebrow_show": false,
     "heading": "Our Professional Speakers",
     "link_label": "See All Speakers"
   },
   "benefits": {
     "eyebrow": "Benefits",
+    "eyebrow_show": false,
     "heading": "Why Newcomers Excel with Us",
     "items": [
       {
@@ -77,6 +80,7 @@
   },
   "get_involved": {
     "eyebrow": "Get Involved",
+    "eyebrow_show": false,
     "heading": "Four Ways to Connect With Our Mission",
     "items": [
       {
