@@ -11,6 +11,22 @@ locale: "en"
 
 collections:
   # ------------------------------------------------------------
+  # Event Mode — switch ON while an event is coming up, OFF otherwise.
+  # ------------------------------------------------------------
+  - name: "event"
+    label: "Event Mode"
+    files:
+      - name: "event"
+        label: "Event Mode"
+        file: "content/event.json"
+        fields:
+          - { label: "Event Mode ON? (shows Speakers and the event banner in the top card)", name: "event_mode", widget: "boolean", default: false, hint: "OFF = everyday website: no Speakers page, no speakers on Home, normal hero. ON = Speakers page and Home speakers appear, and the hero card shows your event design (if one is uploaded below)." }
+          - { label: "Event Design (shows inside the hero's green card)", name: "event_image", widget: "image", required: false, hint: "Upload the event flyer/banner. A wide (landscape) image works best. Leave empty to keep the normal headline hero even when Event Mode is ON." }
+          - { label: "Event Design Description (for screen readers)", name: "event_image_alt", widget: "string", required: false, default: "Upcoming event" }
+          - { label: "Button Text", name: "button_label", widget: "string", default: "SIGN UP NOW!" }
+          - { label: "Sign-up Link (optional)", name: "signup_url", widget: "string", required: false, hint: "Leave blank to open the website's sign-up form. Paste a link (e.g. Eventbrite) to send people there in a new tab instead." }
+
+  # ------------------------------------------------------------
   # Site-wide settings: logo, brand colors, footer/contact info
   # ------------------------------------------------------------
   - name: "settings"
@@ -75,20 +91,19 @@ collections:
             name: "hero"
             widget: "object"
             fields:
-              - { label: "Badge Text", name: "badge", widget: "string" }
-              - { label: "Show Countdown Timer?", name: "show_countdown", widget: "boolean", default: true }
-              - { label: "Event Date & Time (used by countdown)", name: "event_date", widget: "datetime", required: false }
-              - { label: "Poster Image (replaces the title — any size/shape works)", name: "poster_image", widget: "image" }
-              - { label: "Paragraph (leave blank to hide it)", name: "paragraph", widget: "text", required: false }
+              - { label: "Headline (typed out on load)", name: "headline_start", widget: "string", hint: "The plain white part, e.g. The next generation isn't waiting. It's" }
+              - { label: "Headline Highlighted Ending (green)", name: "headline_highlight", widget: "string", hint: "e.g. emerging." }
+              - { label: "Words That Rotate After The Ending", name: "rotating_words", widget: "list", required: false, hint: "After the green ending types out, the headline erases it and types each of these in turn, then loops back to the first. Include the full stop, e.g. connecting." }
+              - { label: "Subline (leave blank to hide)", name: "subline", widget: "string", required: false }
               - { label: "Button Label", name: "cta_label", widget: "string" }
-              - { label: "Show Lower Photo?", name: "show_photo", widget: "boolean", default: true }
-              - { label: "Hero Image", name: "image", widget: "image" }
-              - { label: "Image Caption", name: "image_caption", widget: "string" }
+              - { label: "Group Photo (transparent PNG works best)", name: "group_image", widget: "image", hint: "Wide cutout of the group. On phones the sides are cropped." }
+              - { label: "Scrolling Ticker Words", name: "ticker_words", widget: "list", hint: "Each word scrolls across the green band, separated by a star." }
           - label: "Who We Are (green section)"
             name: "who_we_are"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Link Label", name: "link_label", widget: "string" }
@@ -103,14 +118,16 @@ collections:
             name: "speakers_preview"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Link Label", name: "link_label", widget: "string" }
           - label: "Why Newcomers Excel (Benefits)"
             name: "benefits"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Benefit Cards"
                 name: "items"
@@ -123,7 +140,8 @@ collections:
             name: "get_involved"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Cards"
                 name: "items"
@@ -150,7 +168,8 @@ collections:
             name: "hero"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Who We Are"
@@ -164,7 +183,8 @@ collections:
             name: "vision"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -172,7 +192,8 @@ collections:
             name: "mission"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -180,7 +201,8 @@ collections:
             name: "values"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - label: "Value Cards (exactly 6 recommended)"
                 name: "items"
@@ -193,14 +215,16 @@ collections:
             name: "promise"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Who We Serve"
             name: "who_we_serve"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
               - { label: "Image", name: "image", widget: "image" }
@@ -208,14 +232,16 @@ collections:
             name: "why_us"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
               - { label: "Paragraph", name: "paragraph", widget: "text" }
           - label: "Founder Story"
             name: "founder"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Photo", name: "image", widget: "image" }
@@ -229,8 +255,67 @@ collections:
             name: "get_involved"
             widget: "object"
             fields:
-              - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+              - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
               - { label: "Heading", name: "heading", widget: "string" }
+
+  # ------------------------------------------------------------
+  # Gallery — each collection (e.g. "Unshaken 2026 Media") is a thumbnail on
+  # the Gallery page. Inside it: a Photos thumbnail and/or a Videos thumbnail.
+  # ------------------------------------------------------------
+  - name: "gallery"
+    label: "Gallery"
+    files:
+      - name: "gallery"
+        label: "Gallery Page"
+        file: "content/gallery.json"
+        fields:
+          - label: "Collections"
+            name: "collections"
+            widget: "list"
+            required: false
+            add_to_top: true
+            summary: "{{fields.title}}"
+            hint: "Each collection shows as a thumbnail on the Gallery page, e.g. 'Unshaken 2026 Media'. Opening it shows its photos, then its videos. You can add photos, videos, or both. New collections go to the top."
+            fields:
+              - { label: "Collection Title", name: "title", widget: "string", hint: "e.g. Unshaken 2026 Media" }
+              - { label: "Collection Thumbnail (leave blank to use the first photo)", name: "cover", widget: "image", required: false }
+              - label: "Photos"
+                name: "photo_sections"
+                widget: "list"
+                required: false
+                summary: "{{fields.heading}}"
+                hint: "Leave empty if this collection has no photos. Each category has an optional heading (e.g. 'Speakers from Unshaken 2026') and its photos. One category with no heading is fine."
+                fields:
+                  - { label: "Category Heading (optional)", name: "heading", widget: "string", required: false }
+                  - { label: "Photos", name: "photos", widget: "image", allow_multiple: true, required: false, hint: "Click 'Choose images' and select as many as you like at once. No captions needed." }
+                  - { label: "Show the last photo you added first?", name: "newest_first", widget: "boolean", default: false, required: false }
+              - label: "Videos"
+                name: "videos"
+                widget: "list"
+                required: false
+                add_to_top: true
+                summary: "{{fields.title}} {{fields.video_url}}"
+                hint: "Leave empty if this collection has no videos. Paste a link from YouTube, Vimeo, Instagram, TikTok, Facebook or anywhere else. YouTube/Vimeo thumbnails are automatic; for the others upload a thumbnail. Links that can't play inside the page open in a new tab."
+                fields:
+                  - { label: "Video Title (optional)", name: "title", widget: "string", required: false }
+                  - { label: "Video Link (any platform)", name: "video_url", widget: "string", required: false }
+                  - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
+                  - { label: "Thumbnail (optional — overrides the automatic one)", name: "thumbnail", widget: "image", required: false }
+                  - { label: "Thumbnail Shape", name: "shape", widget: "select", default: "auto", required: false, options: [{ label: "Automatic", value: "auto" }, { label: "Wide (16:9)", value: "landscape" }, { label: "Square", value: "square" }, { label: "Tall (9:16, for reels/TikToks)", value: "vertical" }] }
+
+  # ------------------------------------------------------------
+  # Speakers page text
+  # ------------------------------------------------------------
+  - name: "speakers_page"
+    label: "Speakers Page Text"
+    files:
+      - name: "speakers_page"
+        label: "Speakers Page Text"
+        file: "content/speakers-page.json"
+        fields:
+          - { label: "Small Heading (tiny text above the title)", name: "eyebrow", widget: "string", required: false }
+          - { label: "Show the small heading?", name: "eyebrow_show", widget: "boolean", default: false, required: false }
 
   # ------------------------------------------------------------
   # Speakers — one file per speaker. Click "New Speaker" to add

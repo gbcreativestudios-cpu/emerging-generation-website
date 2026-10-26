@@ -20,10 +20,11 @@
     <nav class="hidden md:flex items-center gap-8 font-medium">
       <a href="/index.html" class="relative py-2 text-primary">Home<span class="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"></span></a>
       <a href="/about.html" class="relative py-2 text-neutral-500 hover:text-primary transition-colors">About Us</a>
-      <a href="/speakers.html" class="relative py-2 text-neutral-500 hover:text-primary transition-colors">Speakers</a>
+      <a href="/speakers.html" class="event-only relative py-2 text-neutral-500 hover:text-primary transition-colors">Speakers</a>
+      <a href="/gallery.html" class="relative py-2 text-neutral-500 hover:text-primary transition-colors">Gallery</a>
     </nav>
     <div class="hidden md:block">
-      <button data-open-modal="Join Community" data-nav-cta class="bg-accent hover-bg-accent-dark text-white font-semibold px-6 py-2.5 rounded-xl transition-all shadow-md focus:outline-none">Join Community</button>
+      <button data-open-modal="Partner" data-nav-cta class="bg-secondary hover-bg-secondary-dark text-white font-semibold text-base h-12 px-6 inline-flex items-center justify-center rounded-xl transition-all shadow-md focus:outline-none">Become a sponsor</button>
     </div>
     <button id="mobile-menu-btn" class="md:hidden p-2 text-neutral-600 focus:outline-none"></button>
   </div>
@@ -31,9 +32,10 @@
     <div class="px-6 py-6 flex flex-col gap-4 font-medium">
       <a href="/index.html" class="text-left py-2 text-primary">Home</a>
       <a href="/about.html" class="text-left py-2 text-neutral-500">About Us</a>
-      <a href="/speakers.html" class="text-left py-2 text-neutral-500">Speakers</a>
+      <a href="/speakers.html" class="event-only text-left py-2 text-neutral-500">Speakers</a>
+      <a href="/gallery.html" class="text-left py-2 text-neutral-500">Gallery</a>
       <hr class="border-neutral-100 my-2">
-      <button data-open-modal="Join Community" data-nav-cta class="bg-accent hover-bg-accent-dark text-white font-semibold text-center py-3 rounded-xl transition-all shadow-md focus:outline-none">Join Community</button>
+      <button data-open-modal="Partner" data-nav-cta class="bg-secondary hover-bg-secondary-dark text-white font-semibold text-center py-3 rounded-xl transition-all shadow-md focus:outline-none">Become a sponsor</button>
     </div>
   </div>
 </header>
@@ -51,7 +53,8 @@
       <ul class="space-y-3 font-medium text-white/60 text-sm">
         <li><a href="/index.html" class="hover:text-white transition-colors">Home</a></li>
         <li><a href="/about.html" class="hover:text-white transition-colors">About Us</a></li>
-        <li><a href="/speakers.html" class="hover:text-white transition-colors">Featured Speakers</a></li>
+        <li class="event-only"><a href="/speakers.html" class="event-only hover:text-white transition-colors">Featured Speakers</a></li>
+        <li><a href="/gallery.html" class="hover:text-white transition-colors">Gallery</a></li>
       </ul>
     </div>
     <div>

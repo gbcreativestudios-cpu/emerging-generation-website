@@ -1,6 +1,7 @@
 {
   "values": {
     "eyebrow": "Core Pillars",
+    "eyebrow_show": false,
     "heading": "Our Values",
     "items": [
       {
@@ -42,12 +43,14 @@
   },
   "vision": {
     "eyebrow": "The Future",
+    "eyebrow_show": false,
     "heading": "Our Vision",
     "paragraph": "To build a Canada where every immigrant and newcomer youth transitions successfully, operates as an influential community leader, and feels a profound sense of cultural belonging.",
     "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=600"
   },
   "mission": {
     "eyebrow": "The Path",
+    "eyebrow_show": false,
     "heading": "Our Mission",
     "paragraph": "Our ongoing mission is to cultivate structured environments that support mental and physical health, build professional confidence, and coordinate deep peer networking channels.",
     "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600"
@@ -55,6 +58,7 @@
   "founder": {
     "closing_paragraph": "That's when I realized something had to change.\nThe Emerging Generation was born from that realization.\nI didn't create this organization simply to help young immigrants settle in Canada. I created it to ensure they never have to navigate the journey alone.\nMy vision is to build the kind of community I wish I had when I first arrived, a place where young people find belonging before loneliness, encouragement before discouragement, guidance instead of confusion, and mentors who genuinely care.\nAt The Emerging Generation, we believe every young immigrant deserves a safe space to grow, meaningful relationships that inspire confidence, and opportunities to become the leaders they were created to be.\nToday, I look back with gratitude for my own journey because it gave me a purpose much greater than myself.\nIf The Emerging Generation can help even one young person feel seen, supported, and confident enough to embrace their future, then every step of my journey has been worth it.\nWelcome to The Emerging Generation.\nYou don't have to navigate this journey alone.\n",
     "eyebrow": "The Founder's Story",
+    "eyebrow_show": false,
     "name": "Stella Orji-Dada",
     "show_story": true,
     "show_closing": true,
@@ -66,25 +70,30 @@
   },
   "get_involved": {
     "eyebrow": "Next Steps",
+    "eyebrow_show": false,
     "heading": "Are You Ready to Shape Tomorrow?"
   },
   "why_us": {
     "eyebrow": "Our Core Edge",
+    "eyebrow_show": false,
     "heading": "Why The Emerging Generation?",
     "paragraph": "The Emerging Generation exists to walk alongside young people beyond settlement. We provide the support, relationships, and opportunities they need to grow into confident, connected, and purpose-driven leaders. We don't just help young people settle, we help them thrive."
   },
   "hero": {
     "eyebrow": "Our Identity",
+    "eyebrow_show": false,
     "heading": "Empowering the Next Generation of Newcomers",
     "paragraph": "We are dedicated to designing communities of mentorship, structural leadership programs, and professional pathways for immigrant youth across Canada."
   },
   "promise": {
     "eyebrow": "Our Promise",
+    "eyebrow_show": false,
     "heading": "Our Core Commitment",
     "paragraph": "We promise to build structures that allow every youth member to feel integrated and validated, matching resources to actual local newcomer demographics."
   },
   "who_we_serve": {
     "eyebrow": "Target Demographic",
+    "eyebrow_show": false,
     "heading": "Who We Serve",
     "paragraph": "We serve immigrant and newcomer youth aged 15–25, including:\n• International Students\n• Permanent Residents\n• Refugees\n• Protected Persons\n• Canadian-born children of immigrant families\n• Newcomer youth beginning a new chapter in Canada",
     "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=600"
