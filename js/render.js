@@ -615,14 +615,12 @@ async function renderSpeakerDetailPage() {
 
 /* ---------- Gallery ---------- */
 /* Page structure (all editable in Decap → Gallery):
-     /gallery.html              → page headline, then any number of sections.
-                                  A "photo albums" section = a headline + album
-                                  thumbnails (each with a title). A "videos"
-                                  section = a headline + video thumbnails.
-     /gallery.html?album=<slug> → one album. It's made of sections, each with
-                                  an optional heading and its photos under it
-                                  (no captions on photos). Click a photo to open
-                                  it full screen and move through them all.
+     /gallery.html                       → a thumbnail for each collection
+                                           (e.g. "Unshaken 2026 Media").
+     /gallery.html?c=<slug>              → that collection: a Photos thumbnail
+                                           and/or a Videos thumbnail.
+     /gallery.html?c=<slug>&view=photos  → photos, in optional headed categories.
+     /gallery.html?c=<slug>&view=videos  → videos, each with an optional title.
    Layout rule for photos and videos: 3 or fewer = equal-size thumbnails in a
    row; 4 or more = masonry (first row always starts level at the top). */
 
@@ -640,24 +638,28 @@ function gallerySlug(title) {
     .replace(/\s+/g, '-').replace(/-+/g, '-') || 'album';
 }
 
-// Every album from every "photo albums" section, each with a unique URL slug.
-function galleryAlbumsFrom(data) {
+// Each collection (e.g. "Unshaken 2026 Media") has a photos part and/or a videos part.
+function galleryCollectionsFrom(data) {
   const seen = {};
   const out = [];
-  (data.sections || []).forEach(sec => {
-    if (sec.type !== 'albums_section') return;
-    (sec.albums || []).forEach(a => {
-      const groups = (a.sections || []).map(g => {
-        let photos = [].concat(g.photos || []).filter(Boolean);
-        if (g.newest_first) photos = photos.slice().reverse();
-        return { heading: g.heading || '', photos };
-      }).filter(g => g.photos.length);
-      const all = groups.flatMap(g => g.photos);
-      if (!all.length) return;
-      let slug = gallerySlug(a.title);
-      seen[slug] = (seen[slug] || 0) + 1;
-      if (seen[slug] > 1) slug += '-' + seen[slug];
-      out.push({ ref: a, title: a.title || 'Untitled album', slug, groups, photos: all, cover: a.cover || all[0] });
+  (data.collections || []).forEach(c => {
+    const groups = (c.photo_sections || []).map(g => {
+      let photos = [].concat(g.photos || []).filter(Boolean);
+      if (g.newest_first) photos = photos.slice().reverse();
+      return { heading: g.heading || '', photos };
+    }).filter(g => g.photos.length);
+    const photos = groups.flatMap(g => g.photos);
+    const videos = (c.videos || []).map(parseGalleryVideo).filter(Boolean);
+    if (!photos.length && !videos.length) return;
+    let slug = gallerySlug(c.title);
+    seen[slug] = (seen[slug] || 0) + 1;
+    if (seen[slug] > 1) slug += '-' + seen[slug];
+    const videoThumb = videos.map(galleryVideoThumbURL).find(Boolean) || '';
+    out.push({
+      title: c.title || 'Untitled', slug, groups, photos, videos,
+      cover: c.cover || photos[0] || videoThumb,
+      photosCover: c.photos_cover || photos[0] || '',
+      videosCover: c.videos_cover || videoThumb
     });
   });
   return out;
@@ -703,6 +705,12 @@ function parseGalleryVideo(v) {
   }
   if (v.video_file) return { ...base, kind: 'file', platform: 'Video', src: v.video_file, shape: shapeChoice || 'landscape' };
   return null;
+}
+
+function galleryVideoThumbURL(v) {
+  if (v.custom) return v.custom;
+  if (v.kind === 'youtube') return 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
+  return '';
 }
 
 // Thumbnail priority: your own image → the platform's own frame (YouTube,
@@ -813,66 +821,86 @@ function initMasonry() {
 
 /* ----- Pages ----- */
 
+const GALLERY_TITLE_SUFFIX = ' — The Emerging Generation';
+
+function galleryCardHTML(href, img, title, sub) {
+  const pic = img
+    ? `<img src="${galleryImg(img, 900)}" data-orig="${encodeURI(img)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`
+    : `<div class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white/90">${ICONS.play(44)}</div>`;
+  return `
+    <a href="${href}" class="block bg-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-md transition-all group" data-animate>
+      <div class="aspect-[4/3] overflow-hidden bg-neutral-100">${pic}</div>
+      <div class="p-6">
+        <h2 class="font-bold text-lg md:text-xl text-primary group-hover:text-secondary transition-colors leading-snug">${title}</h2>
+        ${sub ? `<p class="text-sm text-neutral-500 font-medium mt-1">${sub}</p>` : ''}
+      </div>
+    </a>`;
+}
+
+function galleryShell(inner, wide) {
+  document.getElementById('page-content').innerHTML = `
+    <div class="bg-white py-12 md:py-20">
+      <div class="max-w-7xl mx-auto ${wide ? 'px-4' : 'px-6'} md:px-6">${inner}</div>
+    </div>`;
+}
+
+const galleryBack = (href, label) =>
+  `<a href="${href}" class="inline-flex items-center gap-2 text-sm font-bold text-neutral-500 hover:text-primary mb-6 transition-colors focus:outline-none">${ICONS.arrowLeft(16)} ${label}</a>`;
+
 async function renderGalleryPage() {
   let data = {};
   try { data = await loadJSON('/content/gallery.json'); } catch (e) { /* empty gallery */ }
-  const albums = galleryAlbumsFrom(data);
-  const slug = new URLSearchParams(window.location.search).get('album');
-  if (slug) {
-    const album = albums.find(a => a.slug === slug);
-    if (album) return renderGalleryAlbum(album, data);
+  const collections = galleryCollectionsFrom(data);
+  const params = new URLSearchParams(window.location.search);
+  const col = collections.find(c => c.slug === params.get('c'));
+  if (col) {
+    const view = params.get('view');
+    if (view === 'photos' && col.photos.length) return renderGalleryPhotos(col);
+    if (view === 'videos' && col.videos.length) return renderGalleryVideos(col);
+    return renderGalleryCollection(col);
   }
-  return renderGalleryIndex(albums, data);
+  return renderGalleryIndex(collections);
 }
 
-function renderGalleryIndex(albums, data) {
-  const title = data.page_title || 'Gallery';
-  document.title = title + ' — The Emerging Generation';
-  const albumByRef = new Map(albums.map(a => [a.ref, a]));
-  const head = (text) => text ? `<h2 class="text-2xl md:text-3xl font-bold text-primary tracking-tight mb-8">${text}</h2>` : '';
-
-  const sections = (data.sections || []).map(sec => {
-    if (sec.type === 'albums_section') {
-      const cards = (sec.albums || []).map(a => albumByRef.get(a)).filter(Boolean);
-      if (!cards.length) return '';
-      return `<section>${head(sec.heading)}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          ${cards.map(a => `
-            <a href="/gallery.html?album=${encodeURIComponent(a.slug)}" class="block bg-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-md transition-all group" data-animate>
-              <div class="aspect-[4/3] overflow-hidden bg-neutral-100">
-                <img src="${galleryImg(a.cover, 900)}" data-orig="${encodeURI(a.cover)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              </div>
-              <div class="p-6">
-                <h3 class="font-bold text-lg text-primary group-hover:text-secondary transition-colors leading-snug">${a.title}</h3>
-                <p class="text-sm text-neutral-500 font-medium mt-1">${a.photos.length} ${a.photos.length === 1 ? 'photo' : 'photos'}</p>
-              </div>
-            </a>`).join('')}
-        </div></section>`;
-    }
-    if (sec.type === 'videos_section') {
-      const videos = (sec.videos || []).map(parseGalleryVideo).filter(Boolean);
-      if (!videos.length) return '';
-      return `<section>${head(sec.heading)}${galleryVideoGroupHTML(videos)}</section>`;
-    }
-    return '';
-  }).filter(Boolean);
-
-  document.getElementById('page-content').innerHTML = `
-    <div class="bg-white py-16 md:py-24">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-14 md:mb-20">
-          <h1 class="text-4xl md:text-5xl font-bold text-primary tracking-tight">${title}</h1>
-          ${data.page_intro ? `<p class="text-neutral-500 text-sm md:text-base mt-4 max-w-xl mx-auto">${data.page_intro}</p>` : ''}
-        </div>
-        <div class="space-y-16 md:space-y-24">
-          ${sections.length ? sections.join('') : '<p class="text-center text-neutral-400 py-16">Photos and videos from our events will appear here.</p>'}
-        </div>
-      </div>
-    </div>`;
+function galleryFinish() {
   initGalleryVideos();
   initMasonry();
   initFadeIn();
   revealPageContent();
+}
+
+// Gallery home: one thumbnail per collection, nothing else.
+function renderGalleryIndex(collections) {
+  document.title = 'Gallery' + GALLERY_TITLE_SUFFIX;
+  galleryShell(`
+    <h1 class="sr-only">Gallery</h1>
+    ${collections.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      ${collections.map(c => galleryCardHTML('/gallery.html?c=' + encodeURIComponent(c.slug), c.cover, c.title)).join('')}
+    </div>` : '<p class="text-center text-neutral-400 py-16">Photos and videos from our events will appear here.</p>'}`);
+  galleryFinish();
+}
+
+// Inside a collection: a Photos thumbnail and/or a Videos thumbnail.
+function renderGalleryCollection(col) {
+  document.title = col.title + GALLERY_TITLE_SUFFIX;
+  const base = '/gallery.html?c=' + encodeURIComponent(col.slug) + '&view=';
+  const cards = [];
+  if (col.photos.length) cards.push(galleryCardHTML(base + 'photos', col.photosCover, 'Photos'));
+  if (col.videos.length) cards.push(galleryCardHTML(base + 'videos', col.videosCover, 'Videos'));
+  galleryShell(`
+    ${galleryBack('/gallery.html', 'Back to Gallery')}
+    <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">${col.title}</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 ${cards.length === 1 ? 'sm:max-w-[calc(50%-1rem)]' : ''}">${cards.join('')}</div>`);
+  galleryFinish();
+}
+
+function renderGalleryVideos(col) {
+  document.title = col.title + ' — Videos' + GALLERY_TITLE_SUFFIX;
+  galleryShell(`
+    ${galleryBack('/gallery.html?c=' + encodeURIComponent(col.slug), 'Back to ' + col.title)}
+    <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">Videos</h1>
+    ${galleryVideoGroupHTML(col.videos)}`);
+  galleryFinish();
 }
 
 function galleryPhotoGroupHTML(photos, start) {
@@ -886,28 +914,21 @@ function galleryPhotoGroupHTML(photos, start) {
   return `<div class="masonry" style="--c0:2;--c1:3;--c2:4">${photos.map((s, i) => `<div class="masonry-item">${photo(s, i, false)}</div>`).join('')}</div>`;
 }
 
-function renderGalleryAlbum(album, data) {
-  document.title = album.title + ' — The Emerging Generation';
+function renderGalleryPhotos(col) {
+  document.title = col.title + ' — Photos' + GALLERY_TITLE_SUFFIX;
   let start = 0;
-  const groupsHTML = album.groups.map(g => {
+  const groupsHTML = col.groups.map(g => {
     const html = `<section>
       ${g.heading ? `<h2 class="text-xl md:text-2xl font-bold text-primary tracking-tight mb-5 md:mb-6">${g.heading}</h2>` : ''}
       ${galleryPhotoGroupHTML(g.photos, start)}</section>`;
     start += g.photos.length;
     return html;
   }).join('');
-
-  document.getElementById('page-content').innerHTML = `
-    <div class="bg-white py-12 md:py-20">
-      <div class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="mb-10 md:mb-14">
-          <a href="/gallery.html" class="inline-flex items-center gap-2 text-sm font-bold text-neutral-500 hover:text-primary mb-6 transition-colors focus:outline-none">${ICONS.arrowLeft(16)} Back to ${data.page_title || 'Gallery'}</a>
-          <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight">${album.title}</h1>
-        </div>
-        <div class="space-y-14 md:space-y-20">${groupsHTML}</div>
-      </div>
-    </div>`;
-  initGalleryLightbox(album.photos);
+  galleryShell(`
+    ${galleryBack('/gallery.html?c=' + encodeURIComponent(col.slug), 'Back to ' + col.title)}
+    <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">Photos</h1>
+    <div class="space-y-14 md:space-y-20">${groupsHTML}</div>`, true);
+  initGalleryLightbox(col.photos);
   initMasonry();
   initFadeIn();
   revealPageContent();

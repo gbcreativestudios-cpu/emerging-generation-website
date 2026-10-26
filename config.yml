@@ -231,8 +231,8 @@ collections:
               - { label: "Heading", name: "heading", widget: "string" }
 
   # ------------------------------------------------------------
-  # Gallery page — a headline, then any number of sections. A section is
-  # either "photo albums" (thumbnails that open an album page) or "videos".
+  # Gallery — each collection (e.g. "Unshaken 2026 Media") is a thumbnail on
+  # the Gallery page. Inside it: a Photos thumbnail and/or a Videos thumbnail.
   # ------------------------------------------------------------
   - name: "gallery"
     label: "Gallery"
@@ -241,59 +241,41 @@ collections:
         label: "Gallery Page"
         file: "content/gallery.json"
         fields:
-          - { label: "Page Headline", name: "page_title", widget: "string", default: "Gallery" }
-          - { label: "Page Intro (leave blank to hide)", name: "page_intro", widget: "string", required: false }
-          - label: "Page Sections"
-            name: "sections"
+          - label: "Collections"
+            name: "collections"
             widget: "list"
             required: false
-            hint: "Add a section for photo albums or for videos, each with its own headline. You can add as many as you like (e.g. 'Photos', 'Videos', 'Behind the scenes') and drag them to reorder."
-            types:
-              - label: "Photo albums section"
-                name: "albums_section"
-                widget: "object"
-                summary: "Photos: {{fields.heading}}"
+            add_to_top: true
+            summary: "{{fields.title}}"
+            hint: "Each collection shows as a thumbnail on the Gallery page, e.g. 'Unshaken 2026 Media'. Inside it you can add photos, videos, or both. New collections go to the top."
+            fields:
+              - { label: "Collection Title", name: "title", widget: "string", hint: "e.g. Unshaken 2026 Media" }
+              - { label: "Collection Thumbnail (leave blank to use the first photo)", name: "cover", widget: "image", required: false }
+              - label: "Photos"
+                name: "photo_sections"
+                widget: "list"
+                required: false
+                summary: "{{fields.heading}}"
+                hint: "Leave empty if this collection has no photos. Each category has an optional heading (e.g. 'Speakers from Unshaken 2026') and its photos. One category with no heading is fine."
                 fields:
-                  - { label: "Section Headline", name: "heading", widget: "string", required: false, default: "Photos" }
-                  - label: "Albums"
-                    name: "albums"
-                    widget: "list"
-                    required: false
-                    add_to_top: true
-                    summary: "{{fields.title}}"
-                    hint: "Each album shows as a thumbnail with its title. Clicking it opens the album's page. New albums are added at the top."
-                    fields:
-                      - { label: "Album Title", name: "title", widget: "string", hint: "e.g. Speakers from previous events" }
-                      - { label: "Album Thumbnail (leave blank to use the first photo)", name: "cover", widget: "image", required: false }
-                      - label: "Sections inside this album"
-                        name: "sections"
-                        widget: "list"
-                        required: false
-                        summary: "{{fields.heading}}"
-                        hint: "Split the album into sections, each with its own heading and photos, e.g. 'Speakers from Unshaken 2026'. Leave a heading blank for no heading."
-                        fields:
-                          - { label: "Section Heading (optional)", name: "heading", widget: "string", required: false }
-                          - { label: "Photos", name: "photos", widget: "image", allow_multiple: true, required: false, hint: "Click 'Choose images' and select as many as you like at once, or upload new ones. Use 'Add more images' to keep adding. No captions needed." }
-                          - { label: "Show the last photo you added first?", name: "newest_first", widget: "boolean", default: false, required: false }
-              - label: "Videos section"
-                name: "videos_section"
-                widget: "object"
-                summary: "Videos: {{fields.heading}}"
+                  - { label: "Category Heading (optional)", name: "heading", widget: "string", required: false }
+                  - { label: "Photos", name: "photos", widget: "image", allow_multiple: true, required: false, hint: "Click 'Choose images' and select as many as you like at once. No captions needed." }
+                  - { label: "Show the last photo you added first?", name: "newest_first", widget: "boolean", default: false, required: false }
+              - { label: "Photos Thumbnail (leave blank to use the first photo)", name: "photos_cover", widget: "image", required: false }
+              - label: "Videos"
+                name: "videos"
+                widget: "list"
+                required: false
+                add_to_top: true
+                summary: "{{fields.title}} {{fields.video_url}}"
+                hint: "Leave empty if this collection has no videos. Paste a link from YouTube, Vimeo, Instagram, TikTok, Facebook or anywhere else. YouTube/Vimeo thumbnails are automatic; for the others upload a thumbnail. Links that can't play inside the page open in a new tab."
                 fields:
-                  - { label: "Section Headline", name: "heading", widget: "string", required: false, default: "Videos" }
-                  - label: "Videos"
-                    name: "videos"
-                    widget: "list"
-                    required: false
-                    add_to_top: true
-                    summary: "{{fields.title}} {{fields.video_url}}"
-                    hint: "Paste a link from YouTube, Vimeo, Instagram, TikTok, Facebook, or anywhere else. YouTube/Vimeo thumbnails are automatic; for the others you can upload a thumbnail. Links that can't play inside the page open in a new tab."
-                    fields:
-                      - { label: "Video Title (optional)", name: "title", widget: "string", required: false }
-                      - { label: "Video Link (any platform)", name: "video_url", widget: "string", required: false }
-                      - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
-                      - { label: "Thumbnail (optional — overrides the automatic one)", name: "thumbnail", widget: "image", required: false }
-                      - { label: "Thumbnail Shape", name: "shape", widget: "select", default: "auto", required: false, options: [{ label: "Automatic", value: "auto" }, { label: "Wide (16:9)", value: "landscape" }, { label: "Square", value: "square" }, { label: "Tall (9:16, for reels/TikToks)", value: "vertical" }] }
+                  - { label: "Video Title (optional)", name: "title", widget: "string", required: false }
+                  - { label: "Video Link (any platform)", name: "video_url", widget: "string", required: false }
+                  - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
+                  - { label: "Thumbnail (optional — overrides the automatic one)", name: "thumbnail", widget: "image", required: false }
+                  - { label: "Thumbnail Shape", name: "shape", widget: "select", default: "auto", required: false, options: [{ label: "Automatic", value: "auto" }, { label: "Wide (16:9)", value: "landscape" }, { label: "Square", value: "square" }, { label: "Tall (9:16, for reels/TikToks)", value: "vertical" }] }
+              - { label: "Videos Thumbnail (leave blank to use the first video's)", name: "videos_cover", widget: "image", required: false }
 
   # ------------------------------------------------------------
   # Speakers — one file per speaker. Click "New Speaker" to add

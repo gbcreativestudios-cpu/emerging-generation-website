@@ -17,12 +17,11 @@ speaker profiles without touching code.
   title, photo, bio, experience, speaking topics). New speakers show
   up automatically on the Speakers page and (the newest 3) on Home.
 
-- **Gallery** — the page has a headline and any number of sections, each
-  either *photo albums* or *videos*. An album has a title and thumbnail and
-  opens its own page, which is split into sections (each with an optional
-  heading) of photos. Videos accept links from YouTube, Vimeo, Instagram,
-  TikTok, Facebook or anywhere else. Groups of 4+ photos/videos use a
-  masonry layout; 3 or fewer sit in an equal row.
+- **Gallery** — the page is a grid of collection thumbnails (e.g. "Unshaken
+  2026 Media"). Opening one shows a Photos thumbnail and/or a Videos thumbnail
+  (only the ones it has). Photos are grouped in optional headed categories;
+  videos accept links from YouTube, Vimeo, Instagram, TikTok, Facebook or
+  anywhere else. Groups of 4+ use masonry; 3 or fewer sit in an equal row.
 
 Changing colors in Site Settings updates the whole site, since every
 page reads its brand colors from `content/settings.json` at load time.
