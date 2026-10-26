@@ -453,3 +453,21 @@ body > footer.is-loaded {
 .stack-empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.9);
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); }
 .stack:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 10px; }
+
+/* Event mode: speaker links are hidden unless Event Mode is switched on in
+   the CMS (render.js adds .event-on to <html> once it knows). */
+.event-only { display: none !important; }
+html.event-on .event-only { display: revert !important; }
+
+/* Hero in event mode: the green card holds the uploaded event design */
+.hero-event-img {
+  display: block; width: 100%; height: auto;
+  max-height: 34svh; object-fit: contain; margin: 0 auto;
+  border-radius: .25rem;
+}
+@media (min-width: 900px) {
+  .hero-event-img { max-height: calc(36 * var(--s)); }
+  .hero-card--event .hero-cta-row { margin-top: calc(2.6 * var(--s)); }
+}
+.hero-card--event .hero-cta-row { justify-content: center; }
+@media (min-width: 900px) { .hero-card--event .hero-cta-row { justify-content: flex-end; } }

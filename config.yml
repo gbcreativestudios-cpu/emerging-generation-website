@@ -11,6 +11,22 @@ locale: "en"
 
 collections:
   # ------------------------------------------------------------
+  # Event Mode — switch ON while an event is coming up, OFF otherwise.
+  # ------------------------------------------------------------
+  - name: "event"
+    label: "Event Mode"
+    files:
+      - name: "event"
+        label: "Event Mode"
+        file: "content/event.json"
+        fields:
+          - { label: "Event Mode ON? (shows Speakers and the event banner in the top card)", name: "event_mode", widget: "boolean", default: false, hint: "OFF = everyday website: no Speakers page, no speakers on Home, normal hero. ON = Speakers page and Home speakers appear, and the hero card shows your event design (if one is uploaded below)." }
+          - { label: "Event Design (shows inside the hero's green card)", name: "event_image", widget: "image", required: false, hint: "Upload the event flyer/banner. A wide (landscape) image works best. Leave empty to keep the normal headline hero even when Event Mode is ON." }
+          - { label: "Event Design Description (for screen readers)", name: "event_image_alt", widget: "string", required: false, default: "Upcoming event" }
+          - { label: "Button Text", name: "button_label", widget: "string", default: "SIGN UP NOW!" }
+          - { label: "Sign-up Link (optional)", name: "signup_url", widget: "string", required: false, hint: "Leave blank to open the website's sign-up form. Paste a link (e.g. Eventbrite) to send people there in a new tab instead." }
+
+  # ------------------------------------------------------------
   # Site-wide settings: logo, brand colors, footer/contact info
   # ------------------------------------------------------------
   - name: "settings"

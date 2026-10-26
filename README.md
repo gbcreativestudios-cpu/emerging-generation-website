@@ -17,6 +17,11 @@ speaker profiles without touching code.
   title, photo, bio, experience, speaking topics). New speakers show
   up automatically on the Speakers page and (the newest 3) on Home.
 
+- **Event Mode** — one switch (Decap → Event Mode). OFF: everyday site, with
+  no Speakers page, no speakers on Home and the normal headline hero. ON:
+  Speakers appear and, if an event design is uploaded, the hero's green card
+  shows it with a "SIGN UP NOW!" button (opens the sign-up form, or your own
+  link).
 - **Gallery** — the page is a grid of collection thumbnails (e.g. "Unshaken
   2026 Media"). Opening one shows its photos (in optional headed categories)
   followed by a Videos section. Videos accept links from YouTube, Vimeo,

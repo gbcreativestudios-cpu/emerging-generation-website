@@ -56,8 +56,25 @@ function slugFromPath(path) {
 
 /* ---------- Shared: settings (logo, colors, footer, nav) ---------- */
 
+// Event Mode (Decap → Event Mode). Off = the everyday site: no Speakers page,
+// no speakers on Home. On = speakers shown, and the hero card can carry the
+// uploaded event design with a sign-up button.
+let _eventPromise;
+function loadEventMode() {
+  if (!_eventPromise) {
+    _eventPromise = loadJSON('/content/event.json').catch(() => ({})).then(ev => {
+      ev = ev || {};
+      ev.on = ev.event_mode === true || ev.event_mode === 'true';
+      document.documentElement.classList.toggle('event-on', ev.on);
+      return ev;
+    });
+  }
+  return _eventPromise;
+}
+
 async function renderSettings() {
   const settings = await loadJSON('/content/settings.json');
+  loadEventMode();
 
   // Apply brand colors as CSS variables so every page updates
   const root = document.documentElement.style;
@@ -158,7 +175,8 @@ function speakerCardHTML(speaker, large) {
 
 async function renderHomePage() {
   const data = await loadJSON('/content/home.json');
-  const speakers = (await loadAllSpeakers()).slice(0, 3);
+  const event = await loadEventMode();
+  const speakers = event.on ? (await loadAllSpeakers()).slice(0, 3) : [];
   const iconMap = { compass: 'compass', sparkles: 'sparkles', heart: 'heart', users: 'users', briefcase: 'briefcase' };
   const colorMap = { accent: 'accent', secondary: 'secondary', yellow: 'yellow', primary: 'primary' };
 
@@ -210,12 +228,19 @@ async function renderHomePage() {
     [...tickerWords, ...tickerWords].map(w => `<span>${w}</span>${star}`).join('') + '</div>';
   const heroSubHTML = hero.subline ? `<p class="hero-sub hero-reveal" style="--d:.16s;--rise:12px">${hero.subline}</p>` : '';
 
-  document.getElementById('page-content').innerHTML = `
-    <section class="hero" id="hero">
-      <span class="hero-ring hero-ring--orange" data-depth="0.3" aria-hidden="true"></span>
-      <span class="hero-ring hero-ring--green" data-depth="0.3" aria-hidden="true"></span>
-
-      <div class="hero-card-wrap">
+  // Event mode: the card shows the uploaded event design instead of the headline
+  const eventHero = event.on && event.event_image;
+  const eventLabel = event.button_label || 'SIGN UP NOW!';
+  const eventBtnClass = 'bg-accent hover-bg-accent-dark text-white font-semibold text-base h-12 px-6 inline-flex items-center justify-center rounded-xl transition-all shadow-md focus:outline-none';
+  const eventBtn = event.signup_url
+    ? `<a href="${event.signup_url}" target="_blank" rel="noopener noreferrer" class="${eventBtnClass}">${eventLabel}</a>`
+    : `<button data-open-modal="Join Community" class="${eventBtnClass}">${eventLabel}</button>`;
+  const heroCardHTML = eventHero ? `
+        <div class="hero-card hero-card--event hero-reveal" data-depth="0.16" style="--d:0s;--rise:16px">
+          <h1 class="sr-only">${event.event_image_alt || 'Upcoming event'}</h1>
+          <img class="hero-event-img" src="${event.event_image}" alt="${event.event_image_alt || 'Upcoming event'}" fetchpriority="high">
+          <div class="hero-cta-row hero-reveal" style="--d:.2s;--rise:12px">${eventBtn}</div>
+        </div>` : `
         <div class="hero-card hero-reveal" data-depth="0.16" style="--d:0s;--rise:16px">
           <h1 class="hero-title" aria-label="${headlineFull}">
             <span class="hero-title-ghost" aria-hidden="true">${headStart} <span class="hl">${longestWord}</span></span>
@@ -225,7 +250,30 @@ async function renderHomePage() {
           <div class="hero-cta-row hero-reveal" style="--d:.3s;--rise:12px">
             <button data-open-modal="Join Community" class="bg-accent hover-bg-accent-dark text-white font-semibold text-base h-12 px-6 inline-flex items-center justify-center rounded-xl transition-all shadow-md focus:outline-none">${hero.cta_label}</button>
           </div>
+        </div>`;
+
+  // Speakers on Home only exist in event mode
+  const speakersSectionHTML = event.on ? `
+    <section class="bg-white py-24">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.speakers_preview.eyebrow}</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.speakers_preview.heading}</h2>
+          </div>
+          <a href="/speakers.html" class="inline-flex items-center gap-2 text-accent font-bold hover-text-accent transition-colors focus:outline-none group">${data.speakers_preview.link_label} <span class="group-hover:translate-x-1 transition-transform">${ICONS.arrowRight(18)}</span></a>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">${speakers.map(s => speakerCardHTML(s, false)).join('')}</div>
+      </div>
+    </section>` : '';
+
+  document.getElementById('page-content').innerHTML = `
+    <section class="hero" id="hero">
+      <span class="hero-ring hero-ring--orange" data-depth="0.3" aria-hidden="true"></span>
+      <span class="hero-ring hero-ring--green" data-depth="0.3" aria-hidden="true"></span>
+
+      <div class="hero-card-wrap">
+        ${heroCardHTML}
       </div>
 
       <div class="hero-photo" data-depth="0.08">
@@ -252,18 +300,7 @@ async function renderHomePage() {
       </div>
     </section>
 
-    <section class="bg-white py-24">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-3">${data.speakers_preview.eyebrow}</span>
-            <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">${data.speakers_preview.heading}</h2>
-          </div>
-          <a href="/speakers.html" class="inline-flex items-center gap-2 text-accent font-bold hover-text-accent transition-colors focus:outline-none group">${data.speakers_preview.link_label} <span class="group-hover:translate-x-1 transition-transform">${ICONS.arrowRight(18)}</span></a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">${speakers.map(s => speakerCardHTML(s, false)).join('')}</div>
-      </div>
-    </section>
+    ${speakersSectionHTML}
 
     <section class="bg-primary text-white py-24 border-t border-white/5">
       <div class="max-w-7xl mx-auto px-6">
@@ -287,7 +324,7 @@ async function renderHomePage() {
   initFadeIn();
   // Wait (briefly) for the group photo so the hero never appears with a
   // missing picture, then reveal everything together in a quick stagger.
-  const heroImg = document.querySelector('.hero-photo img');
+  const heroImg = document.querySelector('.hero-event-img') || document.querySelector('.hero-photo img');
   await Promise.race([
     heroImg && heroImg.decode ? heroImg.decode().catch(() => {}) : Promise.resolve(),
     new Promise(r => setTimeout(r, 1800))
@@ -549,6 +586,7 @@ async function renderAboutPage() {
 /* ---------- Speakers list page ---------- */
 
 async function renderSpeakersPage() {
+  if (!(await loadEventMode()).on) { window.location.replace('/'); return; }
   const speakers = await loadAllSpeakers();
   document.getElementById('page-content').innerHTML = `
     <div class="bg-white py-24">
@@ -567,6 +605,7 @@ async function renderSpeakersPage() {
 /* ---------- Speaker detail page ---------- */
 
 async function renderSpeakerDetailPage() {
+  if (!(await loadEventMode()).on) { window.location.replace('/'); return; }
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   const speakers = await loadAllSpeakers();
