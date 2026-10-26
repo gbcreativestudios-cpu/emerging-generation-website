@@ -368,18 +368,27 @@ body > footer.is-loaded {
 .gallery-item:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 
 .lightbox {
-  position: fixed; inset: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(8, 20, 16, .94);
+  position: fixed; inset: 0; z-index: 60; overflow: hidden;
+  background: #08140f;                 /* solid, so nothing shows through */
+  touch-action: none; overscroll-behavior: contain;
 }
 .lightbox[hidden] { display: none; }
-.lb-img {
-  max-width: min(94vw, 1500px); max-height: 90vh;
-  object-fit: contain; border-radius: .25rem;
-  opacity: 0; transition: opacity .25s ease;
-  user-select: none; -webkit-user-drag: none;
+.lb-track { position: absolute; inset: 0; overflow: hidden; }
+.lb-slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 3.5rem 1rem;
+  transition: transform .32s cubic-bezier(.2, .8, .2, 1);
+  will-change: transform;
 }
-.lb-img.is-in { opacity: 1; }
+.lb-track.is-dragging .lb-slide { transition: none; }
+.lb-slide img {
+  max-width: min(94vw, 1500px); max-height: 100%;
+  width: auto; height: auto; object-fit: contain; border-radius: .25rem;
+  opacity: 0; transition: opacity .25s ease;
+  user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none;
+}
+.lb-slide img.is-in { opacity: 1; }
 .lb-btn {
   position: absolute; z-index: 2;
   width: 3rem; height: 3rem; border: 0; border-radius: 9999px;
@@ -387,6 +396,7 @@ body > footer.is-loaded {
   background: rgba(255, 255, 255, .12); color: #fff; cursor: pointer;
   transition: background .2s ease;
 }
+.lb-btn[hidden] { display: none; }
 .lb-btn:hover, .lb-btn:focus-visible { background: rgba(255, 255, 255, .28); outline: none; }
 .lb-close { top: 1rem; right: 1rem; }
 .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); }
@@ -396,7 +406,7 @@ body > footer.is-loaded {
   .lb-prev, .lb-next { top: auto; bottom: 1.25rem; transform: none; }
   .lb-prev { left: calc(50% - 3.5rem); }
   .lb-next { right: calc(50% - 3.5rem); }
-  .lb-img { max-height: 78vh; }
+  .lb-slide { padding: 4rem .5rem 6rem; }
 }
 
 .video-card { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: .25rem; overflow: hidden; background: #0b1f19; }

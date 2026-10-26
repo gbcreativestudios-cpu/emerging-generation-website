@@ -899,6 +899,8 @@ function galleryPhotoGroupHTML(photos, start) {
 
 function initGalleryLightbox(photos) {
   if (!photos.length) return;
+  const n = photos.length;
+  const loop = n >= 3;
   const box = document.createElement('div');
   box.className = 'lightbox';
   box.setAttribute('role', 'dialog');
@@ -906,70 +908,97 @@ function initGalleryLightbox(photos) {
   box.setAttribute('aria-label', 'Photo viewer');
   box.hidden = true;
   box.innerHTML = `
+    <div class="lb-track">${photos.map(() => '<div class="lb-slide"><img alt="" draggable="false"></div>').join('')}</div>
     <button type="button" class="lb-btn lb-close" aria-label="Close">${ICONS.close(26)}</button>
     <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">${ICONS.arrowLeft(26)}</button>
-    <img class="lb-img" alt="">
     <button type="button" class="lb-btn lb-next" aria-label="Next photo">${ICONS.arrowRight(26)}</button>`;
   document.body.appendChild(box);
 
-  const img = box.querySelector('.lb-img');
-  let index = 0, opener = null;
+  const slides = [...box.querySelectorAll('.lb-slide')];
+  const track = box.querySelector('.lb-track');
+  let index = 0, opener = null, dx = 0, dragging = false;
 
-  const preload = (i) => { const n = new Image(); n.src = galleryImg(photos[(i + photos.length) % photos.length], 1800); };
-  let token = 0;
-  function show(i) {
-    index = (i + photos.length) % photos.length;
-    const mine = ++token;
-    img.classList.remove('is-in');
-    // Load the next photo off-screen first and only then swap it in, so two
-    // photos can never be on screen together, even when clicking quickly.
-    const swap = (url) => { if (mine !== token) return; img.src = url; requestAnimationFrame(() => img.classList.add('is-in')); };
-    const pre = new Image();
-    pre.onload = () => swap(pre.src);
-    pre.onerror = () => {
-      const orig = new Image();
-      orig.onload = () => swap(orig.src);
-      orig.src = encodeURI(photos[index]);
-    };
-    pre.src = galleryImg(photos[index], 1800);
-    preload(index + 1); preload(index - 1);
+  // Every photo lives in its own full-screen slide. Only the current one and
+  // its two neighbours are ever visible, positioned side by side, so photos
+  // can't pile on top of each other however fast you swipe.
+  function offsetOf(i) {
+    let d = i - index;
+    if (loop) { if (d > n / 2) d -= n; if (d < -n / 2) d += n; }
+    return d;
+  }
+  function load(i) {
+    const img = slides[i].querySelector('img');
+    if (img.dataset.loaded) return;
+    img.dataset.loaded = '1';
+    img.onload = () => img.classList.add('is-in');
+    img.onerror = () => { img.onerror = null; img.src = encodeURI(photos[i]); };
+    img.src = galleryImg(photos[i], 1800);
+  }
+  function render() {
+    slides.forEach((s, i) => {
+      const d = offsetOf(i);
+      const show = Math.abs(d) <= 1;
+      s.style.visibility = show ? 'visible' : 'hidden';
+      s.style.transform = `translate3d(calc(${d * 100}% + ${dragging ? dx : 0}px),0,0)`;
+      s.setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
+      if (show) load(i);
+    });
+    box.querySelector('.lb-prev').hidden = !loop && index === 0;
+    box.querySelector('.lb-next').hidden = !loop && index === n - 1;
+  }
+  function go(i) {
+    index = loop ? (i + n) % n : Math.max(0, Math.min(n - 1, i));
+    dx = 0; dragging = false; track.classList.remove('is-dragging');
+    render();
   }
   function open(i, trigger) {
     opener = trigger || null;
     box.hidden = false;
     document.body.style.overflow = 'hidden';
-    show(i);
-    box.querySelector('.lb-close').focus();
+    track.classList.add('is-dragging');       // place slides without sliding in
+    go(i);
+    requestAnimationFrame(() => requestAnimationFrame(() => track.classList.remove('is-dragging')));
+    box.querySelector('.lb-close').focus({ preventScroll: true });
   }
   function close() {
     box.hidden = true;
     document.body.style.overflow = '';
-    token++;
-    img.removeAttribute('src');
-    img.classList.remove('is-in');
-    if (opener) opener.focus();
+    if (opener) opener.focus({ preventScroll: true });
   }
 
   document.querySelectorAll('.gallery-item').forEach(el =>
     el.addEventListener('click', () => open(Number(el.dataset.index), el)));
   box.querySelector('.lb-close').addEventListener('click', close);
-  box.querySelector('.lb-prev').addEventListener('click', (e) => { e.stopPropagation(); show(index - 1); });
-  box.querySelector('.lb-next').addEventListener('click', (e) => { e.stopPropagation(); show(index + 1); });
-  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  box.querySelector('.lb-prev').addEventListener('click', () => go(index - 1));
+  box.querySelector('.lb-next').addEventListener('click', () => go(index + 1));
   window.addEventListener('keydown', (e) => {
     if (box.hidden) return;
     if (e.key === 'Escape') close();
-    else if (e.key === 'ArrowLeft') show(index - 1);
-    else if (e.key === 'ArrowRight') show(index + 1);
+    else if (e.key === 'ArrowLeft') go(index - 1);
+    else if (e.key === 'ArrowRight') go(index + 1);
   });
 
-  // Swipe left / right on touch screens
-  let startX = null;
-  box.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  box.addEventListener('touchend', (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    startX = null;
-    if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
-  }, { passive: true });
+  // Drag / swipe: the photos follow your finger, then settle on the next one
+  let startX = 0, startT = 0, moved = false;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return;
+    startX = e.clientX; startT = Date.now(); moved = false; dx = 0; dragging = true;
+    track.classList.add('is-dragging');
+    track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    dx = e.clientX - startX;
+    if (Math.abs(dx) > 6) moved = true;
+    render();
+  });
+  const release = (e) => {
+    if (!dragging) return;
+    const fast = Date.now() - startT < 300 && Math.abs(dx) > 30;
+    const next = (Math.abs(dx) > 70 || fast) ? (dx < 0 ? index + 1 : index - 1) : index;
+    if (!moved && e.type === 'pointerup' && !e.target.closest('img')) { dragging = false; close(); return; }
+    go(next);
+  };
+  track.addEventListener('pointerup', release);
+  track.addEventListener('pointercancel', release);
 }
