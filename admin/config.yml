@@ -247,7 +247,7 @@ collections:
             required: false
             add_to_top: true
             summary: "{{fields.title}}"
-            hint: "Each collection shows as a thumbnail on the Gallery page, e.g. 'Unshaken 2026 Media'. Inside it you can add photos, videos, or both. New collections go to the top."
+            hint: "Each collection shows as a thumbnail on the Gallery page, e.g. 'Unshaken 2026 Media'. Opening it shows its photos, then its videos. You can add photos, videos, or both. New collections go to the top."
             fields:
               - { label: "Collection Title", name: "title", widget: "string", hint: "e.g. Unshaken 2026 Media" }
               - { label: "Collection Thumbnail (leave blank to use the first photo)", name: "cover", widget: "image", required: false }
@@ -261,7 +261,6 @@ collections:
                   - { label: "Category Heading (optional)", name: "heading", widget: "string", required: false }
                   - { label: "Photos", name: "photos", widget: "image", allow_multiple: true, required: false, hint: "Click 'Choose images' and select as many as you like at once. No captions needed." }
                   - { label: "Show the last photo you added first?", name: "newest_first", widget: "boolean", default: false, required: false }
-              - { label: "Photos Thumbnail (leave blank to use the first photo)", name: "photos_cover", widget: "image", required: false }
               - label: "Videos"
                 name: "videos"
                 widget: "list"
@@ -275,7 +274,6 @@ collections:
                   - { label: "Or upload a video file (short clips, .mp4)", name: "video_file", widget: "file", required: false }
                   - { label: "Thumbnail (optional — overrides the automatic one)", name: "thumbnail", widget: "image", required: false }
                   - { label: "Thumbnail Shape", name: "shape", widget: "select", default: "auto", required: false, options: [{ label: "Automatic", value: "auto" }, { label: "Wide (16:9)", value: "landscape" }, { label: "Square", value: "square" }, { label: "Tall (9:16, for reels/TikToks)", value: "vertical" }] }
-              - { label: "Videos Thumbnail (leave blank to use the first video's)", name: "videos_cover", widget: "image", required: false }
 
   # ------------------------------------------------------------
   # Speakers — one file per speaker. Click "New Speaker" to add

@@ -18,10 +18,10 @@ speaker profiles without touching code.
   up automatically on the Speakers page and (the newest 3) on Home.
 
 - **Gallery** — the page is a grid of collection thumbnails (e.g. "Unshaken
-  2026 Media"). Opening one shows a Photos thumbnail and/or a Videos thumbnail
-  (only the ones it has). Photos are grouped in optional headed categories;
-  videos accept links from YouTube, Vimeo, Instagram, TikTok, Facebook or
-  anywhere else. Groups of 4+ use masonry; 3 or fewer sit in an equal row.
+  2026 Media"). Opening one shows its photos (in optional headed categories)
+  followed by a Videos section. Videos accept links from YouTube, Vimeo,
+  Instagram, TikTok, Facebook or anywhere else. Groups of 4+ use masonry; 3 or
+  fewer sit in an equal row.
 
 Changing colors in Site Settings updates the whole site, since every
 page reads its brand colors from `content/settings.json` at load time.

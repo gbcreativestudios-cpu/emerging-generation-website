@@ -615,12 +615,10 @@ async function renderSpeakerDetailPage() {
 
 /* ---------- Gallery ---------- */
 /* Page structure (all editable in Decap → Gallery):
-     /gallery.html                       → a thumbnail for each collection
-                                           (e.g. "Unshaken 2026 Media").
-     /gallery.html?c=<slug>              → that collection: a Photos thumbnail
-                                           and/or a Videos thumbnail.
-     /gallery.html?c=<slug>&view=photos  → photos, in optional headed categories.
-     /gallery.html?c=<slug>&view=videos  → videos, each with an optional title.
+     /gallery.html          → a thumbnail for each collection (e.g. "Unshaken
+                              2026 Media").
+     /gallery.html?c=<slug> → that collection: its photos (in optional headed
+                              categories) followed by a "Videos" section.
    Layout rule for photos and videos: 3 or fewer = equal-size thumbnails in a
    row; 4 or more = masonry (first row always starts level at the top). */
 
@@ -657,9 +655,7 @@ function galleryCollectionsFrom(data) {
     const videoThumb = videos.map(galleryVideoThumbURL).find(Boolean) || '';
     out.push({
       title: c.title || 'Untitled', slug, groups, photos, videos,
-      cover: c.cover || photos[0] || videoThumb,
-      photosCover: c.photos_cover || photos[0] || '',
-      videosCover: c.videos_cover || videoThumb
+      cover: c.cover || photos[0] || videoThumb
     });
   });
   return out;
@@ -814,6 +810,10 @@ function initMasonry() {
   };
   const queue = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(layout); };
   grids.forEach(g => g.addEventListener('load', queue, true));   // images finishing loading
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(queue);
+    grids.forEach(g => g.querySelectorAll(':scope > .masonry-item > *').forEach(el => ro.observe(el)));
+  }
   window.addEventListener('resize', queue);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(queue);
   layout();
@@ -823,17 +823,14 @@ function initMasonry() {
 
 const GALLERY_TITLE_SUFFIX = ' — The Emerging Generation';
 
-function galleryCardHTML(href, img, title, sub) {
+function galleryCardHTML(href, img, title) {
   const pic = img
-    ? `<img src="${galleryImg(img, 900)}" data-orig="${encodeURI(img)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`
-    : `<div class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white/90">${ICONS.play(44)}</div>`;
+    ? `<img src="${galleryImg(img, 900)}" data-orig="${encodeURI(img)}" alt="" loading="lazy" decoding="async" ${GALLERY_IMG_FALLBACK}>`
+    : `<div class="stack-empty">${ICONS.play(44)}</div>`;
   return `
-    <a href="${href}" class="block bg-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-md transition-all group" data-animate>
-      <div class="aspect-[4/3] overflow-hidden bg-neutral-100">${pic}</div>
-      <div class="p-6">
-        <h2 class="font-bold text-lg md:text-xl text-primary group-hover:text-secondary transition-colors leading-snug">${title}</h2>
-        ${sub ? `<p class="text-sm text-neutral-500 font-medium mt-1">${sub}</p>` : ''}
-      </div>
+    <a href="${href}" class="stack" data-animate>
+      <span class="stack-frame"><span class="stack-pic">${pic}</span></span>
+      <h2 class="mt-5 font-bold text-lg md:text-xl text-primary leading-snug">${title}</h2>
     </a>`;
 }
 
@@ -851,22 +848,8 @@ async function renderGalleryPage() {
   let data = {};
   try { data = await loadJSON('/content/gallery.json'); } catch (e) { /* empty gallery */ }
   const collections = galleryCollectionsFrom(data);
-  const params = new URLSearchParams(window.location.search);
-  const col = collections.find(c => c.slug === params.get('c'));
-  if (col) {
-    const view = params.get('view');
-    if (view === 'photos' && col.photos.length) return renderGalleryPhotos(col);
-    if (view === 'videos' && col.videos.length) return renderGalleryVideos(col);
-    return renderGalleryCollection(col);
-  }
-  return renderGalleryIndex(collections);
-}
-
-function galleryFinish() {
-  initGalleryVideos();
-  initMasonry();
-  initFadeIn();
-  revealPageContent();
+  const col = collections.find(c => c.slug === new URLSearchParams(window.location.search).get('c'));
+  return col ? renderGalleryCollection(col) : renderGalleryIndex(collections);
 }
 
 // Gallery home: one thumbnail per collection, nothing else.
@@ -874,33 +857,33 @@ function renderGalleryIndex(collections) {
   document.title = 'Gallery' + GALLERY_TITLE_SUFFIX;
   galleryShell(`
     <h1 class="sr-only">Gallery</h1>
-    ${collections.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+    ${collections.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14 px-2 md:px-0">
       ${collections.map(c => galleryCardHTML('/gallery.html?c=' + encodeURIComponent(c.slug), c.cover, c.title)).join('')}
     </div>` : '<p class="text-center text-neutral-400 py-16">Photos and videos from our events will appear here.</p>'}`);
-  galleryFinish();
+  initFadeIn();
+  revealPageContent();
 }
 
-// Inside a collection: a Photos thumbnail and/or a Videos thumbnail.
+// Inside a collection: its photos (in headed categories, if any), then its videos.
 function renderGalleryCollection(col) {
   document.title = col.title + GALLERY_TITLE_SUFFIX;
-  const base = '/gallery.html?c=' + encodeURIComponent(col.slug) + '&view=';
-  const cards = [];
-  if (col.photos.length) cards.push(galleryCardHTML(base + 'photos', col.photosCover, 'Photos'));
-  if (col.videos.length) cards.push(galleryCardHTML(base + 'videos', col.videosCover, 'Videos'));
+  const heading = (text) => `<h2 class="text-xl md:text-2xl font-bold text-primary tracking-tight mb-5 md:mb-6">${text}</h2>`;
+  let start = 0;
+  const sections = col.groups.map(g => {
+    const html = `<section>${g.heading ? heading(g.heading) : ''}${galleryPhotoGroupHTML(g.photos, start)}</section>`;
+    start += g.photos.length;
+    return html;
+  });
+  if (col.videos.length) sections.push(`<section>${heading('Videos')}${galleryVideoGroupHTML(col.videos)}</section>`);
   galleryShell(`
     ${galleryBack('/gallery.html', 'Back to Gallery')}
     <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">${col.title}</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 ${cards.length === 1 ? 'sm:max-w-[calc(50%-1rem)]' : ''}">${cards.join('')}</div>`);
-  galleryFinish();
-}
-
-function renderGalleryVideos(col) {
-  document.title = col.title + ' — Videos' + GALLERY_TITLE_SUFFIX;
-  galleryShell(`
-    ${galleryBack('/gallery.html?c=' + encodeURIComponent(col.slug), 'Back to ' + col.title)}
-    <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">Videos</h1>
-    ${galleryVideoGroupHTML(col.videos)}`);
-  galleryFinish();
+    <div class="space-y-14 md:space-y-20">${sections.join('')}</div>`, true);
+  initGalleryLightbox(col.photos);
+  initGalleryVideos();
+  initMasonry();
+  initFadeIn();
+  revealPageContent();
 }
 
 function galleryPhotoGroupHTML(photos, start) {
@@ -912,26 +895,6 @@ function galleryPhotoGroupHTML(photos, start) {
     return `<div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">${photos.map((s, i) => photo(s, i, true)).join('')}</div>`;
   }
   return `<div class="masonry" style="--c0:2;--c1:3;--c2:4">${photos.map((s, i) => `<div class="masonry-item">${photo(s, i, false)}</div>`).join('')}</div>`;
-}
-
-function renderGalleryPhotos(col) {
-  document.title = col.title + ' — Photos' + GALLERY_TITLE_SUFFIX;
-  let start = 0;
-  const groupsHTML = col.groups.map(g => {
-    const html = `<section>
-      ${g.heading ? `<h2 class="text-xl md:text-2xl font-bold text-primary tracking-tight mb-5 md:mb-6">${g.heading}</h2>` : ''}
-      ${galleryPhotoGroupHTML(g.photos, start)}</section>`;
-    start += g.photos.length;
-    return html;
-  }).join('');
-  galleryShell(`
-    ${galleryBack('/gallery.html?c=' + encodeURIComponent(col.slug), 'Back to ' + col.title)}
-    <h1 class="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-10 md:mb-14">Photos</h1>
-    <div class="space-y-14 md:space-y-20">${groupsHTML}</div>`, true);
-  initGalleryLightbox(col.photos);
-  initMasonry();
-  initFadeIn();
-  revealPageContent();
 }
 
 function initGalleryLightbox(photos) {
@@ -953,12 +916,22 @@ function initGalleryLightbox(photos) {
   let index = 0, opener = null;
 
   const preload = (i) => { const n = new Image(); n.src = galleryImg(photos[(i + photos.length) % photos.length], 1800); };
+  let token = 0;
   function show(i) {
     index = (i + photos.length) % photos.length;
+    const mine = ++token;
     img.classList.remove('is-in');
-    img.onerror = () => { img.onerror = null; img.src = encodeURI(photos[index]); };
-    img.onload = () => img.classList.add('is-in');
-    img.src = galleryImg(photos[index], 1800);
+    // Load the next photo off-screen first and only then swap it in, so two
+    // photos can never be on screen together, even when clicking quickly.
+    const swap = (url) => { if (mine !== token) return; img.src = url; requestAnimationFrame(() => img.classList.add('is-in')); };
+    const pre = new Image();
+    pre.onload = () => swap(pre.src);
+    pre.onerror = () => {
+      const orig = new Image();
+      orig.onload = () => swap(orig.src);
+      orig.src = encodeURI(photos[index]);
+    };
+    pre.src = galleryImg(photos[index], 1800);
     preload(index + 1); preload(index - 1);
   }
   function open(i, trigger) {
@@ -971,7 +944,9 @@ function initGalleryLightbox(photos) {
   function close() {
     box.hidden = true;
     document.body.style.overflow = '';
+    token++;
     img.removeAttribute('src');
+    img.classList.remove('is-in');
     if (opener) opener.focus();
   }
 
