@@ -1,8 +1,89 @@
 {
   "page_title": "Gallery",
   "page_intro": "Moments from our events, past and present.",
-  "photos_heading": "Photos",
-  "albums": [],
-  "videos_heading": "Videos",
-  "videos": []
+  "sections": [
+    {
+      "type": "albums_section",
+      "heading": "Photos",
+      "albums": [
+        {
+          "title": "Speakers from previous events",
+          "cover": "/images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg",
+          "sections": [
+            {
+              "heading": "Speakers from Unshaken 2026",
+              "photos": [
+                "/images/whatsapp-image-2026-07-25-at-3.20.46-am.jpeg",
+                "/images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg",
+                "/images/whatsapp-image-2026-08-24-at-10.39.19-pm.jpeg"
+              ]
+            },
+            {
+              "heading": "Moments from past events",
+              "photos": [
+                "/images/img_1490-tanko-dada-image.jpg",
+                "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
+                "/images/whatsapp-image-2026-07-25-at-3.20.46-am.jpeg",
+                "/images/hero-group.webp",
+                "/images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg",
+                "/images/whatsapp-image-2026-08-24-at-10.39.19-pm.jpeg"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Special moments from past events",
+          "cover": "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
+          "sections": [
+            {
+              "heading": "",
+              "photos": [
+                "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
+                "/images/img_1490-tanko-dada-image.jpg",
+                "/images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg",
+                "/images/hero-group.webp",
+                "/images/whatsapp-image-2026-07-25-at-3.20.46-am.jpeg"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "videos_section",
+      "heading": "Videos",
+      "videos": [
+        {
+          "title": "Placeholder video 1",
+          "video_url": "https://www.instagram.com/theemerginggeneration/",
+          "thumbnail": "/images/whatsapp-image-2026-07-25-at-3.20.46-am.jpeg",
+          "shape": "landscape"
+        },
+        {
+          "title": "Placeholder video 2",
+          "video_url": "https://www.instagram.com/theemerginggeneration/",
+          "thumbnail": "/images/young_adults_connecting_in_publi…_202607280037.jpeg",
+          "shape": "landscape"
+        },
+        {
+          "title": "Placeholder video 3",
+          "video_url": "https://www.instagram.com/theemerginggeneration/",
+          "thumbnail": "/images/whatsapp-image-2026-08-24-at-10.39.19-pm.jpeg",
+          "shape": "landscape"
+        },
+        {
+          "title": "Placeholder video 4",
+          "video_url": "https://www.instagram.com/theemerginggeneration/",
+          "thumbnail": "/images/img_1490-tanko-dada-image.jpg",
+          "shape": "landscape"
+        },
+        {
+          "title": "Placeholder video 5",
+          "video_url": "https://www.instagram.com/theemerginggeneration/",
+          "thumbnail": "/images/whatsapp-image-2026-08-07-at-1.08.34-am.jpeg",
+          "shape": "landscape"
+        }
+      ]
+    }
+  ]
 }

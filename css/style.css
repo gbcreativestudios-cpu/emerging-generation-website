@@ -336,19 +336,34 @@ body > footer.is-loaded {
 /* ============================================================
    Gallery page — masonry photo dump, full-screen viewer, videos
    ============================================================ */
-.gallery-grid { column-count: 2; column-gap: .75rem; }
-@media (min-width: 640px)  { .gallery-grid { column-count: 3; column-gap: 1rem; } }
-@media (min-width: 1024px) { .gallery-grid { column-count: 4; } }
+/* Masonry: used when a group has 4 or more items. JS (initMasonry) gives each
+   item a row span from its height, so items fill left-to-right and the first
+   row is always level at the top. 3 or fewer items use a plain equal grid. */
+.masonry {
+  --cols: var(--c0, 2);
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-rows: 1px;
+  grid-auto-flow: row dense;
+  align-items: start;
+  column-gap: .75rem;
+  visibility: hidden;
+}
+.masonry.is-laid-out { visibility: visible; }
+@media (min-width: 640px)  { .masonry { --cols: var(--c1, 3); column-gap: 1rem; } }
+@media (min-width: 1024px) { .masonry { --cols: var(--c2, 4); } }
+.masonry-item { min-width: 0; }
+
 .gallery-item {
   display: block; width: 100%;
-  margin: 0 0 .75rem; padding: 0;
-  break-inside: avoid;
+  margin: 0; padding: 0;
   border: 0; border-radius: 1rem; overflow: hidden;
   background: color-mix(in srgb, var(--color-primary) 6%, white);
   cursor: zoom-in;
 }
-@media (min-width: 640px) { .gallery-item { margin-bottom: 1rem; } }
 .gallery-item img { display: block; width: 100%; height: auto; min-height: 7rem; transition: transform .5s ease; }
+.gallery-item--equal { aspect-ratio: 4 / 3; }
+.gallery-item--equal img { height: 100%; object-fit: cover; }
 .gallery-item:hover img { transform: scale(1.04); }
 .gallery-item:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 
@@ -384,9 +399,9 @@ body > footer.is-loaded {
   .lb-img { max-height: 78vh; }
 }
 
-.video-card { position: relative; aspect-ratio: 16 / 9; border-radius: 1rem; overflow: hidden; background: #0b1f19; }
+.video-card { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: 1rem; overflow: hidden; background: #0b1f19; }
 .video-card video, .video-card iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
-.video-poster { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer;
+.video-poster { display: block; position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer;
   background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 70%, black)); }
 .video-poster img, .video-poster video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .video-play {
@@ -397,3 +412,9 @@ body > footer.is-loaded {
   transition: transform .2s ease;
 }
 .video-poster:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
+.video-chip {
+  position: absolute; left: .85rem; bottom: .85rem;
+  padding: .3rem .7rem; border-radius: 9999px;
+  background: rgba(255, 255, 255, .16); color: #fff;
+  font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+}

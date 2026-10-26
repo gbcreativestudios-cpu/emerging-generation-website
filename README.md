@@ -17,11 +17,12 @@ speaker profiles without touching code.
   title, photo, bio, experience, speaking topics). New speakers show
   up automatically on the Speakers page and (the newest 3) on Home.
 
-- **Gallery** — make photo albums (each with a title and thumbnail,
-  e.g. "Speakers from previous events") and add photos to them; add
-  videos by pasting a YouTube/Vimeo link (the thumbnail is picked up
-  automatically). Clicking an album opens its photos in a full-screen
-  viewer you can scroll through.
+- **Gallery** — the page has a headline and any number of sections, each
+  either *photo albums* or *videos*. An album has a title and thumbnail and
+  opens its own page, which is split into sections (each with an optional
+  heading) of photos. Videos accept links from YouTube, Vimeo, Instagram,
+  TikTok, Facebook or anywhere else. Groups of 4+ photos/videos use a
+  masonry layout; 3 or fewer sit in an equal row.
 
 Changing colors in Site Settings updates the whole site, since every
 page reads its brand colors from `content/settings.json` at load time.
